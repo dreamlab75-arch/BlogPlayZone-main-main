@@ -1,0 +1,25 @@
+[
+    {
+      "autor": "João Martins",
+      "iniciais": "JM",
+      "tempo": "2 horas atrás",
+      "tags": ["RPG", "Opinião"],
+      "titulo": "Por que Elden Ring definiu uma nova era para os RPGs",
+      "texto": "Após mais de 200 horas de jogo, posso afirmar com segurança que Elden Ring não é apenas mais um souls-like...",
+      "likes": 234,
+      "comentarios": 56,
+      "views": "1.2k"
+    },
+    {
+      "autor": "Ana Silva",
+      "iniciais": "AS",
+      "tempo": "5 horas atrás",
+      "tags": ["FPS", "E-Sports"],
+      "titulo": "Como melhorei meu rank em Valorant: 5 dicas práticas",
+      "texto": "Depois de ficar preso no Prata por meses, finalmente consegui subir para Diamante seguindo estas estratégias...",
+      "likes": 189,
+      "comentarios": 42,
+      "views": "890"
+    }
+  ]
+  
