@@ -298,16 +298,23 @@ body {
       color: #35F2DF;
     }
     .social-icon {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      text-align: center;
-      line-height: 40px;
-      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;     /* remove fundo */
+      width: auto;          /* remove tamanho fixo */
+      height: auto;
+      line-height: normal;
+      transition: transform 0.3s ease;
     }
+    
     .social-icon:hover {
-      background-color: #35F2DF;
-      transform: translateY(-5px);
+      transform: translateY(-3px);
+    }
+    
+    .social-icon img {
+      width: 25px;
+      height: 25px;
+      display: block;
+      filter: brightness(0) invert(1);
     }
