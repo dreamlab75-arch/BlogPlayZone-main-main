@@ -11,95 +11,30 @@
 </head>
 <body>
   <!-- ========== CONTEÚDO PRINCIPAL COM SIDEBAR ========== -->
-  <section class="py-5">
-    <div class="container">
-      <div class="row">
-        
-        <!-- COLUNA PRINCIPAL (Posts dos Leitores) -->
-        <div class="col-lg-12">
-          <h2 class="section-title" id="posts">Posts em Alta</h2>
-          
-          <!-- Post 1 -->
-          <div class="post-card">
-            <div class="post-author">
-              <div class="post-avatar">JM</div>
-              <div class="post-author-info">
-                <h6>João Martins</h6>
-                <small><i class="bi bi-clock"></i> 2 horas atrás</small>
-              </div>
-            </div>
-            <div class="post-tags">
-              <span class="post-tag">RPG</span>
-              <span class="post-tag">Opinião</span>
-            </div>
-            <h4 class="post-title">Por que Elden Ring definiu uma nova era para os RPGs</h4>
-            <p class="post-excerpt">
-              Após mais de 200 horas de jogo, posso afirmar com segurança que Elden Ring não é apenas mais um souls-like. 
-              A FromSoftware conseguiu criar algo único que mistura a dificuldade característica da série com liberdade de exploração...
-            </p>
-            <div class="post-stats">
-              <span><i class="bi bi-heart-fill"></i> 234 curtidas</span>
-              <span><i class="bi bi-chat-fill"></i> 56 comentários</span>
-              <span><i class="bi bi-eye-fill"></i> 1.2k visualizações</span>
-            </div>
-          </div>
+  <!-- posts-alta.html -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="section-title" id="posts">Posts em Alta</h2>
 
-          <!-- Post 2 -->
-          <div class="post-card">
-            <div class="post-author">
-              <div class="post-avatar">AS</div>
-              <div class="post-author-info">
-                <h6>Ana Silva</h6>
-                <small><i class="bi bi-clock"></i> 5 horas atrás</small>
-              </div>
-            </div>
-            <div class="post-tags">
-              <span class="post-tag">FPS</span>
-              <span class="post-tag">E-Sports</span>
-            </div>
-            <h4 class="post-title">Como melhorei meu rank em Valorant: 5 dicas práticas</h4>
-            <p class="post-excerpt">
-              Depois de ficar preso no Prata por meses, finalmente consegui subir para Diamante seguindo estas estratégias. 
-              A primeira e mais importante: comunicação com o time é TUDO. Vou compartilhar o que funcionou para mim...
-            </p>
-            <div class="post-stats">
-              <span><i class="bi bi-heart-fill"></i> 189 curtidas</span>
-              <span><i class="bi bi-chat-fill"></i> 42 comentários</span>
-              <span><i class="bi bi-eye-fill"></i> 890 visualizações</span>
-            </div>
-          </div>
+        <!-- Container que receberá os posts dinamicamente -->
+        <div id="posts-container"></div>
 
-          <!-- Post 3 -->
-          <div class="post-card">
-            <div class="post-author">
-              <div class="post-avatar">PC</div>
-              <div class="post-author-info">
-                <h6>Pedro Costa</h6>
-                <small><i class="bi bi-clock"></i> 1 dia atrás</small>
-              </div>
-            </div>
-            <div class="post-tags">
-              <span class="post-tag">Hardware</span>
-              <span class="post-tag">Review</span>
-            </div>
-            <h4 class="post-title">Vale a pena montar um PC gamer em 2025? Minha experiência</h4>
-            <p class="post-excerpt">
-              Gastei R$ 8.000 montando meu setup dos sonhos e vou contar se valeu a pena. Spoiler: sim, mas com ressalvas. 
-              Vou mostrar cada componente escolhido, os desafios que enfrentei e o desempenho real nos jogos AAA...
-            </p>
-            <div class="post-stats">
-              <span><i class="bi bi-heart-fill"></i> 312 curtidas</span>
-              <span><i class="bi bi-chat-fill"></i> 78 comentários</span>
-              <span><i class="bi bi-eye-fill"></i> 2.1k visualizações</span>
-            </div>
-          </div>
-
-          <!-- Botão Ver Mais Posts -->
-          <div class="text-center mt-4">
-            <button class="btn btn-ver-mais">
-              <i></i>Ver Todos os Posts
-            </button>
-          </div>
+        <!-- Botão Ver Mais Posts -->
+        <div class="text-center mt-4">
+          <button class="btn btn-ver-mais">
+            <i></i>Ver Todos os Posts
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  
+    <!-- Link para o JS externo -->
+    <script src="posts.js"></script>
+  </section>
+</section>
 </body>
 </html>
