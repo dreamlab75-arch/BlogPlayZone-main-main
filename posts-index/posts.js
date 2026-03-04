@@ -1,12 +1,11 @@
-fetch('post-template.html')
+fetch('posts-index/post-template.html')
   .then(res => res.text())
   .then(templateHTML => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = templateHTML;
     const template = tempDiv.querySelector('#post-template');
 
-    // Carrega os posts do JSON
-    fetch('posts.json')
+    fetch('posts-index/posts.json')
       .then(res => res.json())
       .then(posts => {
         const container = document.getElementById('posts-container');

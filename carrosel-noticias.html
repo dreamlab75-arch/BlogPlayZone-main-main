@@ -3,13 +3,17 @@
   <div class="container">
 
     <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+
+      <!-- INDICADORES -->
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
         <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
       </div>
 
+      <!-- SLIDES -->
       <div class="carousel-inner">
+
         <div class="carousel-item active" style="background-image: url('img/2014-08-20-tw3-gameplay.webp');">
           <div class="carousel-caption">
             <span class="badge bg-warning mb-2">🔥 DESTAQUE</span>
@@ -17,14 +21,39 @@
             <p>Desenvolvedora anuncia título ambicioso com mecânicas inovadoras e gráficos de última geração.</p>
           </div>
         </div>
+
+        <div class="carousel-item" style="background-image: url('img/Prancheta\ 1.svg');">
+          <div class="carousel-caption">
+            <span class="badge bg-danger mb-2">⚡ URGENTE</span>
+            <h3>Sony confirma novo showcase para este mês</h3>
+            <p>Evento promete revelar os maiores lançamentos do segundo semestre para PS5.</p>
+          </div>
+        </div>
+
+        <div class="carousel-item" style="background-image: url('img/Prancheta\ 2.svg');">
+          <div class="carousel-caption">
+            <span class="badge bg-success mb-2">🎮 LANÇAMENTO</span>
+            <h3>Final Fantasy XVII ganha data oficial de lançamento</h3>
+            <p>Square Enix surpreende a comunidade com anúncio durante evento especial em Tóquio.</p>
+          </div>
+        </div>
+
       </div>
 
+      <!-- BOTÃO ANTERIOR — seta customizada -->
       <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
+        <div class="carousel-btn">
+          <i class="bi bi-chevron-left"></i>
+        </div>
       </button>
+
+      <!-- BOTÃO PRÓXIMO — seta customizada -->
       <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
+        <div class="carousel-btn">
+          <i class="bi bi-chevron-right"></i>
+        </div>
       </button>
+
     </div>
   </div>
 </section>

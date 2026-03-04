@@ -1,12 +1,11 @@
-fetch('noticias-template.html')
+fetch('noticias-index/noticias-template.html')
   .then(res => res.text())
   .then(templateHTML => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = templateHTML;
     const template = tempDiv.querySelector('#noticia-template');
 
-    // Carrega as notícias do JSON
-    fetch('noticias.json')
+    fetch('noticias-index/noticias.json')
       .then(res => res.json())
       .then(noticias => {
         const container = document.getElementById('noticias-container');
