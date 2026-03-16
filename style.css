@@ -2,7 +2,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ========== HEADER STYLES ========== */
+/* ========== HEADER ========== */
 .navbar-playzone {
   background: linear-gradient(135deg, #611DF2 0%, #7957F2 50%, #B3B6F2 100%);
   padding: 15px 0;
@@ -25,6 +25,10 @@ body {
 .navbar-playzone .nav-link:hover {
   color: #35F2DF !important;
 }
+.nav-link-playzone {
+  font-size: 1.05rem !important;
+  letter-spacing: 0.3px;
+}
 .search-box {
   background-color: rgba(0, 0, 0, 0.3);
   border: none;
@@ -41,6 +45,21 @@ body {
   color: white;
   outline: none;
   box-shadow: 0 0 0 2px #35F2DF;
+}
+.search-wrapper {
+  position: relative;
+}
+.search-wrapper .search-box {
+  padding-right: 40px;
+}
+.search-wrapper .search-icon {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  font-size: 0.95rem;
 }
 .btn-login {
   background-color: transparent;
@@ -59,7 +78,7 @@ body {
 .btn-signup {
   background-color: #FBB034;
   border: none;
-  color: #000;
+  color: #ffffff;
   border-radius: 25px;
   padding: 8px 25px;
   font-weight: bold;
@@ -70,8 +89,64 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+.account-dropdown {
+  position: relative;
+}
+.btn-account {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: white;
+  border-radius: 25px;
+  padding: 7px 16px;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s;
+}
+.btn-account i {
+  color: white !important;
+}
+.btn-account:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgb(236, 226, 226);
+}
+.person-icon {
+  font-size: 1.75rem;
+}
+.chevron-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+.chevron-icon.open {
+  transform: rotate(180deg);
+}
+.account-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: #ffffff;
+  border: 1px solid rgba(179, 182, 242, 0.3);
+  border-radius: 16px;
+  padding: 16px;
+  min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 9999;
+  animation: dropDown 0.2s ease;
+}
+.account-menu.open {
+  display: block;
+}
+@keyframes dropDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-/* ========== CAROUSEL STYLES ========== */
+/* ========== CAROUSEL ========== */
+.carousel-section {
+  margin-top: 24px;
+}
 .carousel-item {
   height: 500px;
   background-size: cover;
@@ -80,98 +155,63 @@ body {
   border-radius: 16px;
   overflow: hidden;
 }
-
 .carousel-item::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(97, 29, 242, 0.85),
-    rgba(97, 29, 242, 0.15),
-    transparent 21%
-  );
+  background: linear-gradient(to top, rgba(97, 29, 242, 0.85), rgba(97, 29, 242, 0.15), transparent 21%);
   z-index: 1;
 }
-
 .carousel-caption {
   position: absolute;
-  inset: auto 0 0 0; 
+  inset: auto 0 0 0;
   padding: 40px;
   text-align: center;
-  background: none; 
+  background: none;
   z-index: 2;
 }
-
 .carousel-caption h3 {
   font-size: 2.4rem;
   font-weight: 800;
   text-shadow: 0 4px 20px rgba(0,0,0,0.35);
   text-align: center;
 }
-
 .carousel-caption p {
   max-width: 600px;
   text-align: center;
+  margin: 0 auto;
 }
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  background-color: #611DF2;
+.carousel-control-prev,
+.carousel-control-next {
+  width: auto;
+}
+.carousel-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  padding: 18px;
-}
-
-
-
-/* ========== NEWS SIDEBAR ========== */
-.news-sidebar {
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 100px;
-}
-.news-sidebar h4 {
-  color: #611DF2;
-  font-weight: bold;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 4px solid #35F2DF;
-}
-.news-item {
-  padding: 30px 0;
-  border-bottom: 1px solid #eee;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
   transition: all 0.3s;
 }
-.news-item:last-child {
-  border-bottom: none;
+.carousel-btn:hover {
+  background: #611DF2;
+  border-color: #611DF2;
+  transform: scale(1.1);
 }
-.news-item:hover {
-  background-color: #f8f9fa;
-  padding-left: 10px;
-  border-radius: 8px;
-}
-.news-item-title {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.95rem;
-  margin-bottom: 5px;
-}
-.news-item-date {
-  font-size: 0.8rem;
-  color: #999;
-}
-.news-badge {
-  font-size: 0.7rem;
-  padding: 3px 8px;
-  border-radius: 10px;
-  margin-bottom: 5px;
-  display: inline-block;
+.carousel-btn i {
+  color: white;
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
-/* ========== POSTS SECTION ========== */
+/* ========== POSTS ========== */
+.container.posts-container {
+  margin-top: 32px;
+}
 .posts-section {
   background: #f8f9fa;
   padding: 60px 0;
@@ -245,226 +285,6 @@ body {
   margin-right: 8px;
   margin-bottom: 10px;
 }
-.btn-ver-mais {
-  background: linear-gradient(135deg, #611DF2 0%, #7957F2 100%);
-  border-radius: 25px;
-  padding: 12px 40px;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-.btn-ver-mais:hover {
-  background: linear-gradient(135deg, #7957F2 0%, #B3B6F2 100%);
-  transform: scale(1.05);
-}
-
-/* ========== SECTION TITLES ========== */
-.section-title {
-  color: #611DF2;
-  font-weight: bold;
-  margin-bottom: 30px;
-  position: relative;
-  padding-bottom: 15px;
-}
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, #35F2DF, #611DF2);
-  border-radius: 2px;
-}
-
-/* ========== FOOTER STYLES ========== */
-.footer-playzone {
-  background: linear-gradient(135deg, #611DF2 0%, #4E7CD9 100%);
-  color: white;
-  margin-top: 60px;
-}
-.footer-playzone h5 {
-  color: #35F2DF;
-  font-weight: bold;
-}
-.footer-playzone a {
-  color: rgba(255, 255, 255, 0.8);
-  transition: color 0.3s;
-}
-.footer-playzone a:hover {
-  color: #35F2DF;
-}
-.social-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none; 
-  width: auto; 
-  height: auto;
-  line-height: normal;
-  transition: transform 0.3s ease;
-}
-
-.social-icon:hover {
-  transform: translateY(-3px);
-}
-
-.social-icon img {
-  width: 25px;
-  height: 25px;
-  display: block;
-  filter: brightness(0) invert(1);
-}
-/* ========== HEADER EXTRAS ========== */
-.nav-link-playzone {
-  font-size: 1.05rem !important;
-  letter-spacing: 0.3px;
-}
-
-.search-wrapper {
-  position: relative;
-}
-.search-wrapper .search-box {
-  padding-right: 40px;
-}
-.search-wrapper .search-icon {
-  position: absolute;
-  right: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  pointer-events: none;
-  font-size: 0.95rem;
-}
-
-.account-dropdown {
-  position: relative;
-}
-.btn-account {
-  background: rgba(255,255,255,0.15);
-  border: 2px solid rgba(255,255,255,0.4);
-  color: white;
-  border-radius: 25px;
-  padding: 7px 16px;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s;
-}
-.btn-account:hover {
-  background: rgba(255,255,255,0.25);
-  color: white;
-}
-.chevron-icon {
-  font-size: 0.75rem;
-  transition: transform 0.3s ease;
-}
-.chevron-icon.open {
-  transform: rotate(180deg);
-}
-.account-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  background: #1e1e2e;
-  border: 1px solid rgba(179, 182, 242, 0.3);
-  border-radius: 16px;
-  padding: 16px;
-  min-width: 200px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  z-index: 9999;
-  animation: dropDown 0.2s ease;
-}
-.account-menu.open {
-  display: block;
-}
-@keyframes dropDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ========== CAROUSEL SPACING ========== */
-.carousel-section {
-  margin-top: 24px;
-}
-
-.nav-link-playzone {
-  font-size: 1.05rem !important;
-  letter-spacing: 0.3px;
-}
-
-.search-wrapper {
-  position: relative;
-}
-.search-wrapper .search-box {
-  padding-right: 40px;
-}
-.search-wrapper .search-icon {
-  position: absolute;
-  right: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(0, 0, 0, 0.7);
-  pointer-events: none;
-  font-size: 0.95rem;
-}
-
-.account-dropdown {
-  position: relative;
-}
-.btn-account {
-  background: rgba(248, 247, 247, 0.15);
-  border: 2px solid rgba(255,255,255,0.4);
-  color: white;
-  border-radius: 25px;
-  padding: 7px 16px;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s;
-}
-.btn-account i {
-  color: white !important;
-}
-.btn-account:hover {
-  background: rgba(255,255,255,0.25);
-  color: white;
-}
-
-.person-icon {
-  font-size: 1.75rem;
-}
-.chevron-icon {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-.chevron-icon.open {
-  transform: rotate(180deg);
-}
-.account-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  background: #f8f8f8;
-  border: 1px solid rgba(179, 182, 242, 0.3);
-  border-radius: 16px;
-  padding: 16px;
-  min-width: 200px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  z-index: 9999;
-  animation: dropDown 0.2s ease;
-}
-.account-menu.open {
-  display: block;
-}
-@keyframes dropDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-/* ========== BOTÃO LER POST (card) ========== */
 .post-footer {
   display: flex;
   align-items: center;
@@ -497,13 +317,90 @@ body {
   cursor: default;
   white-space: nowrap;
 }
+.btn-ver-mais {
+    display: inline-block; /* ← adiciona esta linha */
+    background: linear-gradient(135deg, #611DF2 0%, #7957F2 100%);
+    border-radius: 25px;
+    padding: 12px 40px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+.btn-ver-mais:hover {
+  transform: scale(1.05);
+}
 
-/* ========== BOTÃO VER MAIS NOTÍCIA (sidebar) ========== */
+/* ========== SECTION TITLES ========== */
+.section-title {
+  color: #611DF2;
+  font-weight: bold;
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 15px;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #35F2DF, #611DF2);
+  border-radius: 2px;
+}
+
+/* ========== NEWS SIDEBAR ========== */
+.news-sidebar {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 100px;
+}
+.news-sidebar h4 {
+  color: #611DF2;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 4px solid #35F2DF;
+}
+.news-item {
+  padding: 30px 0;
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s;
+}
+.news-item:last-child {
+  border-bottom: none;
+}
+.news-item:hover {
+  background-color: #f8f9fa;
+  padding-left: 10px;
+  border-radius: 8px;
+}
+.news-item-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+.news-item-date {
+  font-size: 0.8rem;
+  color: #999;
+}
 .news-item-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 6px;
+}
+.news-badge {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  display: inline-block;
 }
 .btn-ler-noticia {
   font-size: 0.78rem;
@@ -520,6 +417,54 @@ body {
   font-size: 0.78rem;
   color: #bbb;
   cursor: default;
+}
+
+/* ========== NOTICIA CARD (standalone) ========== */
+.noticia-card {
+  background: none;
+  border-radius: 0;
+  padding: 18px 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  border-left: none;
+  border-bottom: 1px solid #eee;
+  transition: padding-left 0.2s;
+}
+.noticia-card:last-child {
+  border-bottom: none;
+}
+.noticia-card:hover {
+  padding-left: 8px;
+}
+.noticia-card .news-item-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+  margin: 10px 0 8px;
+}
+.noticia-card .news-item-date {
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 10px;
+}
+
+/* ========== NOTÍCIAS LISTA (noticias.html) ========== */
+.noticias-lista .news-item {
+  padding: 20px 25px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+  border-left: 4px solid #611DF2;
+  transition: all 0.3s;
+}
+.noticias-lista .news-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(97,29,242,0.15);
+}
+.noticias-lista .news-item-title {
+  font-size: 1.05rem;
+  margin: 8px 0 6px;
 }
 
 /* ========== PÁGINA DO POST / NOTÍCIA ========== */
@@ -571,157 +516,39 @@ body {
   font-size: 0.9rem;
 }
 
-/* ========== CAROUSEL FIXES ========== */
-.carousel-caption p {
-  max-width: 600px;
-  text-align: center;
-  margin: 0 auto;
+/* ========== FOOTER ========== */
+.footer-playzone {
+  background: linear-gradient(135deg, #611DF2 0%, #4E7CD9 100%);
+  color: white;
+  margin-top: 60px;
 }
-.carousel-control-prev,
-.carousel-control-next {
-  width: auto;
+.footer-playzone h5 {
+  color: #35F2DF;
+  font-weight: bold;
 }
-.carousel-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
+.footer-playzone a {
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.3s;
+}
+.footer-playzone a:hover {
+  color: #35F2DF;
+}
+.social-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s;
-}
-.carousel-btn:hover {
-  background: #611DF2;
-  border-color: #611DF2;
-  transform: scale(1.1);
-}
-.carousel-btn i {
-  color: white;
-  font-size: 1.3rem;
-  line-height: 1;
-}
-.carousel-section {
-  margin-top: 24px;
-}
-
-/* ========== HEADER EXTRAS ========== */
-.nav-link-playzone {
-  font-size: 1.05rem !important;
-  letter-spacing: 0.3px;
-}
-.search-wrapper {
-  position: relative;
-}
-.search-wrapper .search-box {
-  padding-right: 40px;
-}
-.search-wrapper .search-icon {
-  position: absolute;
-  right: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  pointer-events: none;
-  font-size: 0.95rem;
-}
-.account-dropdown {
-  position: relative;
-}
-.btn-account {
-  background: rgba(255,255,255,0.15);
-  border: 2px solid rgba(255,255,255,0.4);
-  color: white;
-  border-radius: 25px;
-  padding: 7px 16px;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s;
-}
-.btn-account i {
-  color: white !important;
-}
-.btn-account:hover {
-  background: rgba(255,255,255,0.25);
-  color: white;
-}
-.chevron-icon {
-  font-size: 1.2rem;
+  background: none;
+  width: auto;
+  height: auto;
+  line-height: normal;
   transition: transform 0.3s ease;
 }
-.chevron-icon.open {
-  transform: rotate(180deg);
+.social-icon:hover {
+  transform: translateY(-3px);
 }
-.account-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  background: #1e1e2e;
-  border: 1px solid rgba(179, 182, 242, 0.3);
-  border-radius: 16px;
-  padding: 16px;
-  min-width: 200px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  z-index: 9999;
-  animation: dropDown 0.2s ease;
-}
-.account-menu.open {
+.social-icon img {
+  width: 25px;
+  height: 25px;
   display: block;
-}
-@keyframes dropDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ========== NOTÍCIAS — MODO LISTA (noticias.html) ========== */
-.noticias-lista .news-item {
-  padding: 20px 25px;
-  background: white;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
-  border-left: 4px solid #611DF2;
-  transition: all 0.3s;
-}
-.noticias-lista .news-item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(97,29,242,0.15);
-}
-.noticias-lista .news-item-title {
-  font-size: 1.05rem;
-  margin: 8px 0 6px;
-}
-
-/* ========== NOTICIA CARD (standalone — para PHP) ========== */
-.noticia-card {
-  background: none;
-  border-radius: 0;
-  padding: 18px 0;
-  margin-bottom: 0;
-  box-shadow: none;
-  border-left: none;
-  border-bottom: 1px solid #eee;
-  transition: padding-left 0.2s;
-}
-.noticia-card:last-child {
-  border-bottom: none;
-}
-.noticia-card:hover {
-  padding-left: 8px;
-}
-.noticia-card .news-item-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #333;
-  margin: 10px 0 8px;
-}
-.noticia-card .news-item-date {
-  font-size: 0.85rem;
-  color: #999;
-  margin-top: 10px;
+  filter: brightness(0) invert(1);
 }
