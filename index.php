@@ -17,7 +17,8 @@
   <template hx-get="header.html" hx-target="#header" hx-trigger="load"></template>
   <div id="header"></div>
 
-  <template hx-get="carrosel-noticias.html" hx-target="#carrosel-noticias" hx-trigger="load"></template>
+  <!-- Carrossel — agora PHP -->
+  <template hx-get="carrosel-noticias.php" hx-target="#carrosel-noticias" hx-trigger="load"></template>
   <div id="carrosel-noticias"></div>
 
   <div class="container posts-container">
@@ -44,8 +45,12 @@
     </div>
   </div>
 
+  <template hx-get="sobre.html" hx-target="#sobre" hx-trigger="load"></template>
+  <div id="sobre"></div>
+
   <template hx-get="footer.html" hx-target="#footer" hx-trigger="load"></template>
   <div id="footer"></div>
 
+  <script src="tempo-relativo.js"></script>
 </body>
 </html>
