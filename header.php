@@ -1,19 +1,21 @@
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-<nav class="navbar navbar-expand-lg navbar-playzone sticky-top">
+<?php session_start(); ?>
+<!-- header.php — fragmento puro -->
+<nav class="navbar navbar-expand-lg navbar-playzone fixed-top">
   <div class="container">
 
+    <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="#home">
       <img src="img/BlogLogo-01-01.svg" alt="PlayZone">
     </a>
 
+    <!-- BOTÃO MOBILE -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.5);">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
 
+      <!-- LINKS centralizados -->
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
           <a class="nav-link nav-link-playzone" href="#home">Início</a>
@@ -29,6 +31,7 @@
         </li>
       </ul>
 
+      <!-- DIREITA: busca + botão sanduíche -->
       <div class="d-flex align-items-center gap-3">
 
         <div class="search-wrapper">
@@ -38,12 +41,19 @@
 
         <div class="account-dropdown">
           <button class="btn btn-account" id="accountToggle" onclick="toggleAccountMenu()">
-            <i class="bi bi-person-circle person-icon"></i>
+            <i class="bi bi-person-circle"></i>
             <i class="bi bi-chevron-down chevron-icon" id="accountChevron"></i>
           </button>
           <div class="account-menu" id="accountMenu">
-            <button class="btn btn-login w-100">Login</button>
-            <button class="btn btn-signup w-100 mt-2">Cadastrar-se</button>
+            <?php if (isset($_SESSION["usuario_id"])): ?>
+              <?php if ($_SESSION["usuario_perfil"] === "adm"): ?>
+                <a href="adm/painel-adm.php" class="btn btn-signup w-100 mb-2 d-block text-center">Painel ADM</a>
+              <?php endif; ?>
+              <a href="auth/ctrl-logout.php" class="btn btn-login w-100 d-block text-center">Sair</a>
+            <?php else: ?>
+              <a href="auth/login.php" class="btn btn-login w-100 d-block text-center">Login</a>
+              <a href="auth/cadastro.php" class="btn btn-signup w-100 mt-2 d-block">Cadastrar-se</a>
+            <?php endif; ?>
           </div>
         </div>
 

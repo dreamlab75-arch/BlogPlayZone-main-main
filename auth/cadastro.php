@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - PlayZone</title>
+  <link href="../style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body class="auth-body">
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <img src="img/BlogLogo-01-01.svg" alt="PlayZone">
+      </div>
+
+      <h4 class="auth-titulo">Criar conta</h4>
+      <p class="auth-subtitulo">Junte-se à comunidade PlayZone</p>
+
+      <?php if (isset($_GET['erro'])): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($_GET['erro']) ?></div>
+      <?php endif; ?>
+
+      <form action="ctrl-cadastro.php" method="POST">
+
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input type="text" name="nome" class="form-control auth-input" placeholder="Seu nome" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control auth-input" placeholder="seu@email.com" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Senha</label>
+          <input type="password" name="senha" class="form-control auth-input" placeholder="Mínimo 6 caracteres" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Avatar <span class="text-muted">(URL da imagem)</span></label>
+          <input type="text" name="avatar" class="form-control auth-input" placeholder="https://...">
+        </div>
+
+        <button type="submit" class="btn btn-ver-mais w-100">Cadastrar-se</button>
+
+      </form>
+
+      <p class="auth-link">Já tem conta? <a href="login.php">Entrar</a></p>
+
+    </div>
+  </div>
+
+</body>
+</html>

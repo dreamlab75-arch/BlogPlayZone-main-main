@@ -1,4 +1,5 @@
 body {
+  padding-top: 80px; /* compensa a altura do fixed-top */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -78,7 +79,7 @@ body {
 .btn-signup {
   background-color: #FBB034;
   border: none;
-  color: #ffffff;
+  color: #000;
   border-radius: 25px;
   padding: 8px 25px;
   font-weight: bold;
@@ -93,7 +94,7 @@ body {
   position: relative;
 }
 .btn-account {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255,255,255,0.15);
   border: 2px solid rgba(255,255,255,0.4);
   color: white;
   border-radius: 25px;
@@ -108,8 +109,8 @@ body {
   color: white !important;
 }
 .btn-account:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: rgb(236, 226, 226);
+  background: rgba(255,255,255,0.25);
+  color: white;
 }
 .person-icon {
   font-size: 1.75rem;
@@ -318,16 +319,14 @@ body {
   white-space: nowrap;
 }
 .btn-ver-mais {
-    display: inline-block; /* ← adiciona esta linha */
-    background: linear-gradient(135deg, #611DF2 0%, #7957F2 100%);
-    border-radius: 25px;
-    padding: 12px 40px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s;
-  }
+  background: linear-gradient(135deg, #611DF2 0%, #7957F2 100%);
+  border-radius: 25px;
+  padding: 12px 40px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
 .btn-ver-mais:hover {
+  background: linear-gradient(135deg, #7957F2 0%, #B3B6F2 100%);
   transform: scale(1.05);
 }
 
@@ -553,6 +552,7 @@ body {
   filter: brightness(0) invert(1);
 }
 
+/* ========== SOBRE ========== */
 .sobre-section {
   background: linear-gradient(135deg, #1a0a4a 0%, #611DF2 50%, #7957F2 100%);
   padding: 60px 0;
@@ -590,6 +590,7 @@ body {
   margin: 0;
 }
 
+/* ========== HEADER TRANSPARENTE COM BLUR ========== */
 .navbar-playzone {
   background: linear-gradient(135deg,
     rgba(97, 29, 242, 0.92) 0%,
@@ -599,8 +600,218 @@ body {
   -webkit-backdrop-filter: blur(12px);
   transition: background 0.3s, box-shadow 0.3s;
 }
- 
+
 /* Sombra aparece só quando o header sobrepõe conteúdo */
 .navbar-playzone.scrolled {
   box-shadow: 0 4px 24px rgba(97, 29, 242, 0.25);
+}
+
+/* ========== AUTH (login/cadastro) ========== */
+.auth-body {
+  background: linear-gradient(135deg, #1a0a4a 0%, #611DF2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+.auth-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.auth-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.auth-logo img {
+  height: 50px;
+}
+.auth-titulo {
+  font-weight: 800;
+  color: #611DF2;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.auth-subtitulo {
+  color: #999;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+}
+.auth-input {
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  padding: 10px 14px;
+  transition: border-color 0.2s;
+}
+.auth-input:focus {
+  border-color: #611DF2;
+  box-shadow: 0 0 0 3px rgba(97,29,242,0.1);
+}
+.auth-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #999;
+  font-size: 0.9rem;
+}
+.auth-link a {
+  color: #611DF2;
+  font-weight: 600;
+  text-decoration: none;
+}
+.auth-link a:hover {
+  text-decoration: underline;
+}
+
+/* ========== PAINEL ADM ========== */
+.adm-body {
+  background: #f4f3ff;
+  min-height: 100vh;
+  padding-top: 0 !important;
+}
+.adm-layout {
+  display: flex;
+  min-height: 100vh;
+}
+.adm-sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #6336eb 20%, #5f39b1 70%);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.adm-sidebar-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.adm-sidebar-logo img {
+  height: 40px;
+}
+.adm-nav {
+  flex: 1;
+}
+.adm-nav-label {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-left: 12px;
+}
+.adm-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+}
+.adm-nav-item:hover,
+.adm-nav-item.active {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+.adm-nav-item--sair {
+  color: #fca5a5;
+}
+.adm-nav-item--sair:hover {
+  background: rgba(239,68,68,0.2);
+  color: #fca5a5;
+}
+.adm-sidebar-footer {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 16px;
+}
+.adm-main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px;
+}
+.adm-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.adm-page-titulo {
+  font-weight: 800;
+  color: #1a0a4a;
+  margin: 0;
+}
+.adm-usuario-logado {
+  color: #611DF2;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.adm-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+.adm-section-titulo {
+  font-weight: 700;
+  color: #611DF2;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #35F2DF;
+}
+.adm-table {
+  margin-bottom: 0;
+}
+.adm-table thead th {
+  color: #611DF2;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+}
+.adm-table tbody tr:hover {
+  background: #f8f7ff;
+}
+.adm-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.adm-badge--adm {
+  background: #ede9fe;
+  color: #611DF2;
+}
+.adm-badge--leitor {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.adm-badge--jornalista {
+  background: #dcfce7;
+  color: #15803d;
+}
+.btn-adm-deletar {
+  color: #ef4444;
+  background: #fee2e2;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-adm-deletar:hover {
+  background: #ef4444;
+  color: white;
 }

@@ -105,7 +105,7 @@ O produtor revelou que a equipe trabalhou por mais de quatro anos no projeto.
 A trilha sonora ficou a cargo de Nobuo Uematsu, que retorna após alguns títulos de ausência.
 
 O jogo terá legendas em português do Brasil.',
-    'LANÇAMENTO', 'bg-primary text-white', 'img/Prancheta 1.svg', 9870, datetime('now', '-1 hours')
+    'LANÇAMENTO', 'bg-primary text-white', 'img/2014-08-20-tw3-gameplay.webp', 9870, datetime('now', '-1 hours')
 ),
 (
     'Fortnite recebe novo mapa e modo de jogo',
@@ -116,7 +116,7 @@ O novo mapa conta com biomas variados: área urbana destruída, floresta densa e
 O novo modo Zero Build Ranked oferece partidas competitivas sem construção.
 
 A atualização também trouxe novos personagens colaborativos de franquias populares.',
-    'ATUALIZAÇÃO', 'bg-success text-white', 'img/Prancheta 2.svg', 7340, datetime('now', '-2 hours')
+    'ATUALIZAÇÃO', 'bg-success text-white', 'img/2014-08-20-tw3-gameplay.webp', 7340, datetime('now', '-2 hours')
 ),
 (
     'Nintendo pode anunciar sucessor do Switch em breve',
@@ -127,7 +127,7 @@ O novo hardware deve manter o conceito híbrido com melhorias significativas de 
 A tela portátil deve receber upgrade com OLED maior e taxa de atualização de 120Hz.
 
 Desenvolvedores third-party já estariam recebendo kits de desenvolvimento há alguns meses.',
-    'RUMOR', 'bg-warning text-dark', 'img/Prancheta 1.svg', 4210, datetime('now', '-3 hours')
+    'RUMOR', 'bg-warning text-dark', 'img/2014-08-20-tw3-gameplay.webp', 4210, datetime('now', '-3 hours')
 ),
 (
     'Como a IA está mudando o desenvolvimento de jogos',
@@ -138,8 +138,42 @@ Ferramentas de IA permitem que artistas criem variações de assets em minutos.
 Modelos de linguagem estão sendo usados para criar personagens que respondem de forma mais natural.
 
 O debate ético sobre o impacto da IA nos empregos da indústria continua intenso.',
-    'ANÁLISE', 'bg-info text-white', 'img/Prancheta 2.svg', 2980, datetime('now', '-5 hours')
+    'ANÁLISE', 'bg-info text-white', 'img/2014-08-20-tw3-gameplay.webp', 2980, datetime('now', '-5 hours')
 );
 
 SELECT id, titulo FROM posts;
 SELECT id, titulo, data_publicacao, visualizacoes FROM noticias ORDER BY visualizacoes DESC;
+
+-- ========== PERFIL E USUARIOS ==========
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS perfil;
+
+CREATE TABLE perfil (
+    id   INTEGER PRIMARY KEY,
+    tipo TEXT    NOT NULL
+);
+
+CREATE TABLE usuarios (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome      TEXT    NOT NULL,
+    email     TEXT    NOT NULL UNIQUE,
+    senha     TEXT    NOT NULL,
+    avatar    TEXT    DEFAULT 'img/avatar-default.png',
+    perfil_id INTEGER DEFAULT 2,
+    FOREIGN KEY (perfil_id) REFERENCES perfil(id)
+);
+
+INSERT INTO perfil (id, tipo) VALUES (1, 'adm');
+INSERT INTO perfil (id, tipo) VALUES (2, 'leitor');
+INSERT INTO perfil (id, tipo) VALUES (3, 'jornalista');
+
+-- Usuário adm padrão — senha: admin123
+INSERT INTO usuarios (nome, email, senha, avatar, perfil_id) VALUES (
+    'Administrador',
+    'admin',
+    '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
+    'img/avatar-default.png',
+    1
+);
+
+SELECT id, nome, email, perfil_id FROM usuarios;

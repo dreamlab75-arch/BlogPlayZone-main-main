@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,7 +15,7 @@
 </head>
 <body>
 
-  <template hx-get="header.html" hx-target="#header" hx-trigger="load"></template>
+  <template hx-get="header.php" hx-target="#header" hx-trigger="load"></template>
   <div id="header"></div>
 
   <!-- Carrossel — agora PHP -->
