@@ -127,7 +127,7 @@ body {
   position: absolute;
   right: 0;
   top: calc(100% + 10px);
-  background: #ffffff;
+  background: #fcfcfc;
   border: 1px solid rgba(179, 182, 242, 0.3);
   border-radius: 16px;
   padding: 16px;
@@ -608,7 +608,9 @@ body {
 
 /* ========== AUTH (login/cadastro) ========== */
 .auth-body {
-  background: linear-gradient(135deg, #1a0a4a 0%, #611DF2 100%);
+  background-image: url('img/fundo_blog.jpg');
+  background-size: cover;
+  background-position: center;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -682,7 +684,7 @@ body {
 .adm-sidebar {
   width: 240px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #6336eb 20%, #5f39b1 70%);
+  background: linear-gradient(180deg, #623ece 0%, #611DF2 100%);
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
@@ -814,4 +816,13 @@ body {
 .btn-adm-deletar:hover {
   background: #ef4444;
   color: white;
+}
+
+/* ========== AVATAR NO HEADER ========== */
+.account-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.6);
 }

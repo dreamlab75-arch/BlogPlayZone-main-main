@@ -14,7 +14,7 @@
     <div class="auth-card">
 
       <div class="auth-logo">
-        <img src="img/BlogLogo-01-01.svg" alt="PlayZone">
+        <img src="/img/BlogLogo-01-01.svg" alt="PlayZone">
       </div>
 
       <h4 class="auth-titulo">Entrar</h4>

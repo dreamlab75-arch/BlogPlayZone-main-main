@@ -27,9 +27,12 @@ $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
 
 if ($usuario) {
     // Salva os dados do usuario na sessão
-    $_SESSION["usuario_id"]   = $usuario["id"];
-    $_SESSION["usuario_nome"] = $usuario["nome"];
+    $_SESSION["usuario_id"]     = $usuario["id"];
+    $_SESSION["usuario_nome"]   = $usuario["nome"];
     $_SESSION["usuario_perfil"] = $usuario["perfil_tipo"];
+    $_SESSION["usuario_avatar"] = $usuario["avatar"];
+
+    
 
     // Todos vão para o index após login
     header("Location: ../index.php");
@@ -39,3 +42,4 @@ if ($usuario) {
     exit;
 }
 ?>
+

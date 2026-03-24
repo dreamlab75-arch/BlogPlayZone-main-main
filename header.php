@@ -1,5 +1,9 @@
 <?php session_start(); ?>
+
 <!-- header.php — fragmento puro -->
+<script>
+  console.log("Avatar:", <?= json_encode($_SESSION['usuario_avatar'] ?? null) ?>);
+</script>
 <nav class="navbar navbar-expand-lg navbar-playzone fixed-top">
   <div class="container">
 
@@ -41,7 +45,11 @@
 
         <div class="account-dropdown">
           <button class="btn btn-account" id="accountToggle" onclick="toggleAccountMenu()">
-            <i class="bi bi-person-circle"></i>
+            <?php if (isset($_SESSION["usuario_avatar"]) && $_SESSION["usuario_avatar"]): ?>
+              <img src="<?= $_SESSION['usuario_avatar'] ?>" class="account-avatar" alt="Avatar">
+            <?php else: ?>
+              <i class="bi bi-person-circle"></i>
+            <?php endif; ?>
             <i class="bi bi-chevron-down chevron-icon" id="accountChevron"></i>
           </button>
           <div class="account-menu" id="accountMenu">
