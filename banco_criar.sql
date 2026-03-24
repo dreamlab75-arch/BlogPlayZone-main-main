@@ -105,7 +105,7 @@ O produtor revelou que a equipe trabalhou por mais de quatro anos no projeto.
 A trilha sonora ficou a cargo de Nobuo Uematsu, que retorna após alguns títulos de ausência.
 
 O jogo terá legendas em português do Brasil.',
-    'LANÇAMENTO', 'bg-primary text-white', 'img/2014-08-20-tw3-gameplay.webp', 9870, datetime('now', '-1 hours')
+    'LANÇAMENTO', 'bg-primary text-white', 'img/Prancheta 1.svg', 9870, datetime('now', '-1 hours')
 ),
 (
     'Fortnite recebe novo mapa e modo de jogo',
@@ -116,7 +116,7 @@ O novo mapa conta com biomas variados: área urbana destruída, floresta densa e
 O novo modo Zero Build Ranked oferece partidas competitivas sem construção.
 
 A atualização também trouxe novos personagens colaborativos de franquias populares.',
-    'ATUALIZAÇÃO', 'bg-success text-white', 'img/2014-08-20-tw3-gameplay.webp', 7340, datetime('now', '-2 hours')
+    'ATUALIZAÇÃO', 'bg-success text-white', 'img/Prancheta 2.svg', 7340, datetime('now', '-2 hours')
 ),
 (
     'Nintendo pode anunciar sucessor do Switch em breve',
