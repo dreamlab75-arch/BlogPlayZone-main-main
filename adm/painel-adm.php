@@ -75,7 +75,7 @@ $result_set_usuarios = $pdo->query($sql);
         <table class="table adm-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th class="coluna-id">#</th>
               <th>Nome</th>
               <th>Email</th>
               <th>Perfil</th>
@@ -91,7 +91,7 @@ $result_set_usuarios = $pdo->query($sql);
                 $perfil = $uma_linha["perfil_tipo"];
               ?>
               <tr>
-                <td><?= $id ?></td>
+                <td class="coluna-id"><?= $id ?></td>
                 <td><?= $nome ?></td>
                 <td><?= $email ?></td>
                 <td><span class="adm-badge adm-badge--<?= $perfil ?>"><?= $perfil ?></span></td>
@@ -100,7 +100,7 @@ $result_set_usuarios = $pdo->query($sql);
                     <a href="ctrl-apagar-usuario.php?id=<?= $id ?>"
                        onclick="return confirm('Deletar <?= $nome ?>?')"
                        class="btn-adm-deletar">
-                      <i class="bi bi-trash-fill"></i>
+                      <i class="bi bi-trash-fill" ></i>
                     </a>
                   <?php endif; ?>
                 </td>

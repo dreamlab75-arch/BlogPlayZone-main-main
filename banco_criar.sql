@@ -172,7 +172,7 @@ INSERT INTO usuarios (nome, email, senha, avatar, perfil_id) VALUES (
     'Administrador',
     'admin',
     '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
-    'img/avatar-default.png',
+    'https://static.wikia.nocookie.net/pkxd/images/1/15/Admin.png/revision/latest?cb=20220114170153&path-prefix=pt-br',
     1
 );
 
