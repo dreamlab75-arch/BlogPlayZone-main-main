@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h5 class="adm-section-titulo mb-0">Adicionar Novo Usuário</h5>
           <button class="btn btn-adm-add" onclick="openAddUserModal()">
-            <i class="bi bi-plus-circle me-2"></i> Novo Usuário
+          <i class="bi bi-person-plus me-2"></i> Novo Usuário
           </button>
         </div>
       </div>
