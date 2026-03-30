@@ -1,8 +1,4 @@
 <?php
-// ============================================================
-// Carrossel — fragmento PHP puro, carregado via HTMX
-// Exibe as 3 notícias mais vistas da última semana
-// ============================================================
  
 require "noticias-index/noticias-model.php";
  
@@ -31,9 +27,9 @@ $slides = $destaques->fetchAll(PDO::FETCH_ASSOC);
           <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>"
                style="background-image: url('<?= $slide['imagem'] ?>');">
             <div class="carousel-caption">
-              <span class="badge <?= $slide['badge_classe'] ?> mb-2">
-                <?= $slide['badge_texto'] ?>
-              </span>
+            <span class="badge <?= categoria_para_badge($slide['categoria']) ?> mb-2">
+    <?= strtoupper($slide['categoria']) ?>
+</span>
               <h3><?= $slide['titulo'] ?></h3>
               <p><?= mb_substr($slide['conteudo'], 0, 120) ?>...</p>
             </div>

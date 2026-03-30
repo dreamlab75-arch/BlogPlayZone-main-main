@@ -247,6 +247,12 @@ body {
   font-weight: bold;
   margin-right: 15px;
 }
+.post-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
 .post-author-info h6 {
   margin: 0;
   font-weight: bold;
@@ -934,3 +940,6 @@ body {
     transform: translateY(0);
   }
 }
+.categoria-lancamento { background: #0d6efd; color: white; }
+.categoria-rumor      { background: #ffc107; color: black; }
+.categoria-analise    { background: #0dcaf0; color: white; }

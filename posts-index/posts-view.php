@@ -11,7 +11,9 @@ $result_set_posts = buscar_posts_em_alta(3);
     <div class="post-card">
 
         <div class="post-author">
-            <div class="post-avatar"><?= $linha_posts["avatar"] ?></div>
+        <div class="post-avatar">
+    <img src="<?= htmlspecialchars($linha_posts["avatar"]) ?>" alt="<?= htmlspecialchars($linha_posts["autor"]) ?>">
+</div>
             <div class="post-author-info">
                 <h6><?= $linha_posts["autor"] ?></h6>
             </div>

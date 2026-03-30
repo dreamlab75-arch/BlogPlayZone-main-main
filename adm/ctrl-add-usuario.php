@@ -39,7 +39,7 @@ if ($stmt_check->fetch()) {
     exit;
 }
 
-$senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+$senha_hash = hash("sha256", $senha);
 
 $sql = "INSERT INTO usuarios (nome, email, senha, perfil_id) VALUES (:nome, :email, :senha, :perfil_id)";
 $stmt = $pdo->prepare($sql);
