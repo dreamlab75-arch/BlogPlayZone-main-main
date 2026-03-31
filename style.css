@@ -213,10 +213,6 @@ body {
 .container.posts-container {
   margin-top: 32px;
 }
-.posts-section {
-  background: #f8f9fa;
-  padding: 60px 0;
-}
 .post-card {
   background: white;
   border-radius: 15px;
@@ -313,16 +309,6 @@ body {
   background: linear-gradient(135deg, #7957F2, #B3B6F2);
   color: white;
   transform: translateX(3px);
-}
-.btn-ler-post--indisponivel {
-  background: #e0e0e0;
-  color: #999;
-  border-radius: 20px;
-  padding: 7px 18px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: default;
-  white-space: nowrap;
 }
 .btn-ver-mais {
   background: linear-gradient(135deg, #611DF2 0%, #7957F2 100%);
@@ -515,10 +501,6 @@ body {
   margin-top: 30px;
   padding-top: 20px;
   border-top: 2px solid #f0f0f0;
-}
-.noticia-meta {
-  color: #999;
-  font-size: 0.9rem;
 }
 
 /* ========== FOOTER ========== */
@@ -943,3 +925,98 @@ body {
 .categoria-lancamento { background: #0d6efd; color: white; }
 .categoria-rumor      { background: #ffc107; color: black; }
 .categoria-analise    { background: #0dcaf0; color: white; }
+
+/* ===== FILTRO POSTS ===== */
+.filtro-posts {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ===== DROPDOWN TAGS ===== */
+.dropdown-tags {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Garantir que os cards apareçam com o estilo correto */
+.posts-container {
+  margin-top: 32px;
+}
+
+/* Melhorar o dropdown de tags */
+.dropdown-tags-box {
+  display: none;
+  position: absolute;
+  top: 45px;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.tag-item {
+  display: block;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tag-item:hover {
+  background: #f2f2f2;
+}
+
+.tag-item input {
+  margin-right: 6px;
+}
+
+/* Paginação */
+.paginacao {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.paginacao a {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #eee;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.paginacao a:hover {
+  background: #ddd;
+}
+
+/* Ajuste para os cards dentro da coluna */
+.post-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  border-left: 5px solid #611DF2;
+}

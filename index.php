@@ -27,7 +27,26 @@
 
       <!-- POSTS — PHP -->
       <div class="col-lg-8">
-        <?php require "posts-index/posts-view.php"; ?>
+      <?php
+require "posts-index/posts-model.php";
+
+$result_set_posts = buscar_posts_em_alta(3);
+?>
+
+<?php while ($linha_posts = $result_set_posts->fetch(PDO::FETCH_ASSOC)): ?>
+
+    <?php 
+    $tags = $linha_posts["tags"] ? explode(",", $linha_posts["tags"]) : [];
+    include "posts-index/post-card.php"; 
+    ?>
+
+<?php endwhile; ?>
+
+<div class="text-center mt-4">
+    <a href="posts-index/posts-view.php" class="btn-ver-mais">
+        Ver todos os posts <i class="bi bi-arrow-right"></i>
+    </a>
+</div>
       </div>
 
       <!-- SIDEBAR NOTÍCIAS — PHP -->
@@ -53,5 +72,6 @@
   <div id="footer"></div>
 
   <script src="tempo-relativo.js"></script>
+  
 </body>
 </html>

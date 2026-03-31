@@ -25,7 +25,7 @@
           <a class="nav-link nav-link-playzone" href="#home">Início</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="#posts">Posts</a>
+          <a class="nav-link nav-link-playzone" href="/posts-index/posts-view.php">Posts</a>
         </li>
         <li class="nav-item">
           <a class="nav-link nav-link-playzone" href="#noticias">Notícias</a>
