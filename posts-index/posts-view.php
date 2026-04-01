@@ -36,9 +36,15 @@ $usuario_perfil = $_SESSION['usuario_perfil'] ?? '';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+    integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+    crossorigin="anonymous"></script>
 </head>
 <body>
-<?php include __DIR__ . '/../header.php'; ?>
+<?php
+$base = '../'; // prefixo de caminho para a raiz, usado pelo header.php
+include __DIR__ . '/../header.php';
+?>
 
 <!-- HERO -->
 <div class="posts-page-hero">
@@ -368,18 +374,7 @@ document.querySelectorAll('input[name="tags_post[]"]').forEach(cb => {
 
 <script src="../tempo-relativo.js"></script>
 
-<?php
-// Inclui footer (ajuste o caminho se necessário)
-$footer_path = __DIR__ . '/../footer.html';
-if (file_exists($footer_path)) {
-  // Footer estático — inclui diretamente
-  // include $footer_path;
-}
-?>
-<template hx-get="../footer.html" hx-target="#footer" hx-trigger="load"></template>
+<template hx-get="/../footer.html" hx-target="#footer" hx-trigger="load"></template>
 <div id="footer"></div>
-<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
-  integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
-  crossorigin="anonymous"></script>
 </body>
 </html>

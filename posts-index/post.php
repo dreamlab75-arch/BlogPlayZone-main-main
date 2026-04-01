@@ -104,7 +104,10 @@ $usuario_logado = isset($_SESSION['usuario_id']);
 </head>
 <body>
 
-<?php include __DIR__ . '/../header.php'; ?>
+<?php
+$base = '../';
+include __DIR__ . '/../header.php';
+?>
 
 <div class="container">
   <div class="post-single-wrap">

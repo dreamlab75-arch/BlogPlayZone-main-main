@@ -1,15 +1,17 @@
-<?php session_start(); ?>
+<?php
+session_start();
+// $base é definido pela página que inclui este header.
+// Na raiz: $base = '' (ou não definido)
+// Em subpastas: $base = '../'
+if (!isset($base)) $base = '';
+?>
 
-<!-- header.php — fragmento puro -->
-<script>
-  console.log("Avatar:", <?= json_encode($_SESSION['usuario_avatar'] ?? null) ?>);
-</script>
 <nav class="navbar navbar-expand-lg navbar-playzone fixed-top">
   <div class="container">
 
     <!-- LOGO -->
-    <a class="navbar-brand d-flex align-items-center" href="#home">
-      <img src="img/BlogLogo-01-01.svg" alt="PlayZone">
+    <a class="navbar-brand d-flex align-items-center" href="<?= $base ?>index.php">
+      <img src="<?= $base ?>img/BlogLogo-01-01.svg" alt="PlayZone">
     </a>
 
     <!-- BOTÃO MOBILE -->
@@ -22,20 +24,20 @@
       <!-- LINKS centralizados -->
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="#home">Início</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>index.php">Início</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="/posts-index/posts-view.php">Posts</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>posts-index/posts-view.php">Posts</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="#noticias">Notícias</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>index.php#noticias">Notícias</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="#about">Sobre</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>sobre.html">Sobre</a>
         </li>
       </ul>
 
-      <!-- DIREITA: busca + botão sanduíche -->
+      <!-- DIREITA: busca + conta -->
       <div class="d-flex align-items-center gap-3">
 
         <div class="search-wrapper">
@@ -55,12 +57,12 @@
           <div class="account-menu" id="accountMenu">
             <?php if (isset($_SESSION["usuario_id"])): ?>
               <?php if ($_SESSION["usuario_perfil"] === "adm"): ?>
-                <a href="adm/painel-adm.php" class="btn btn-signup w-100 mb-2 d-block text-center">Painel ADM</a>
+                <a href="<?= $base ?>adm/painel-adm.php" class="btn btn-signup w-100 mb-2 d-block text-center">Painel ADM</a>
               <?php endif; ?>
-              <a href="auth/ctrl-logout.php" class="btn btn-login w-100 d-block text-center">Sair</a>
+              <a href="<?= $base ?>auth/ctrl-logout.php" class="btn btn-login w-100 d-block text-center">Sair</a>
             <?php else: ?>
-              <a href="auth/login.php" class="btn btn-login w-100 d-block text-center">Login</a>
-              <a href="auth/cadastro.php" class="btn btn-signup w-100 mt-2 d-block">Cadastrar-se</a>
+              <a href="<?= $base ?>auth/login.php" class="btn btn-login w-100 d-block text-center">Login</a>
+              <a href="<?= $base ?>auth/cadastro.php" class="btn btn-signup w-100 mt-2 d-block">Cadastrar-se</a>
             <?php endif; ?>
           </div>
         </div>
@@ -70,4 +72,4 @@
   </div>
 </nav>
 
-<script src="header.js"></script>
+<script src="<?= $base ?>header.js"></script>
