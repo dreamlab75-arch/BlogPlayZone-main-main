@@ -1,5 +1,7 @@
 <?php
-session_start();
+// Inicia sessão apenas se ainda não estiver ativa
+if (session_status() === PHP_SESSION_NONE) session_start();
+
 // $base é definido pela página que inclui este header.
 // Na raiz: $base = '' (ou não definido)
 // Em subpastas: $base = '../'
@@ -59,6 +61,7 @@ if (!isset($base)) $base = '';
               <?php if ($_SESSION["usuario_perfil"] === "adm"): ?>
                 <a href="<?= $base ?>adm/painel-adm.php" class="btn btn-signup w-100 mb-2 d-block text-center">Painel ADM</a>
               <?php endif; ?>
+              <a href="<?= $base ?>perfil/painel-usuario.php" class="btn btn-signup w-100 mb-2 d-block text-center">Minha Conta</a>
               <a href="<?= $base ?>auth/ctrl-logout.php" class="btn btn-login w-100 d-block text-center">Sair</a>
             <?php else: ?>
               <a href="<?= $base ?>auth/login.php" class="btn btn-login w-100 d-block text-center">Login</a>
