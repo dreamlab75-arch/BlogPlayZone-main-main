@@ -53,7 +53,7 @@ $result_set_posts = buscar_posts_em_alta(3);
       <div class="col-lg-4">
         <div class="news-sidebar" id="noticias">
           <h4><i class="bi bi-newspaper me-2"></i>Últimas Notícias</h4>
-          <?php require "noticias-index/noticias-view.php"; ?>
+          <?php require "noticias-index/sidebar-noticias.php"; ?>
           <div class="text-center mt-4">
             <a href="noticias.html" class="btn-ver-mais">
               Ver todas as notícias <i class="bi bi-arrow-right"></i>

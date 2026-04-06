@@ -32,7 +32,7 @@ if (!isset($base)) $base = '';
           <a class="nav-link nav-link-playzone" href="<?= $base ?>posts-index/posts-view.php">Posts</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="<?= $base ?>index.php#noticias">Notícias</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>noticias-index/noticias-view.php">Notícias</a>
         </li>
         <li class="nav-item">
           <a class="nav-link nav-link-playzone" href="<?= $base ?>sobre.html">Sobre</a>

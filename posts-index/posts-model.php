@@ -21,7 +21,7 @@ function buscar_posts() {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(t.nome, ',')       AS tags,
+            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
@@ -49,7 +49,7 @@ function buscar_posts_em_alta($limite = 3) {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(t.nome, ',')       AS tags,
+            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
@@ -81,7 +81,7 @@ function buscar_post_por_id($id) {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(t.nome, ',')       AS tags,
+            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
