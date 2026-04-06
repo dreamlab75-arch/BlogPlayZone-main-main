@@ -219,15 +219,6 @@ include __DIR__ . '/../header.php';
         </div>
         <?php endwhile; ?>
 
-        <h4 class="mt-4"><i class="bi bi-tags me-2"></i>Categorias</h4>
-        <div class="d-flex flex-wrap gap-2 mt-2">
-          <?php foreach ($categorias as $cat): ?>
-            <a href="noticias-view.php?categoria=<?= urlencode($cat) ?>"
-               class="noticias-cat-pill <?= $categoria===$cat?'ativa':'' ?>">
-              <?= htmlspecialchars(ucfirst($cat)) ?>
-            </a>
-          <?php endforeach; ?>
-        </div>
       </div>
     </div>
 

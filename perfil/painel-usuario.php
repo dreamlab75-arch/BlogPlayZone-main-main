@@ -153,9 +153,6 @@ $todasTags = buscar_tags();
         };
         ?>
       </h4>
-      <span class="adm-usuario-logado">
-        <i class="bi bi-person-circle"></i> <?= htmlspecialchars($usuario['nome']) ?>
-      </span>
     </div>
 
     <!-- Mensagens -->
@@ -250,7 +247,7 @@ $todasTags = buscar_tags();
               </button>
               <button onclick="confirmarDeletar(<?= $post['id'] ?>, '<?= htmlspecialchars(addslashes($post['titulo'])) ?>')"
                       class="painel-btn-deletar" title="Deletar">
-                <i class="bi bi-trash-fill"></i>
+                <i class="bi bi-trash-fill"></i> Excluir
               </button>
             </div>
 
