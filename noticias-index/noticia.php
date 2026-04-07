@@ -8,12 +8,77 @@ if (!$id) { header('Location: noticias-view.php'); exit; }
 $noticia = buscar_noticia_por_id($id);
 if (!$noticia) { header('Location: noticias-view.php'); exit; }
 
+// ── Registra visualização (1 por usuário por notícia) ─────────────────────
 if (isset($_SESSION['usuario_id'])) {
     registrar_visualizacao_noticia($id, $_SESSION['usuario_id']);
 }
 
+// ── Processa ação de curtir / comentar (POST) ─────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
+    if (!isset($_SESSION['usuario_id'])) {
+        header('Location: ../auth/login.php');
+        exit;
+    }
+    $uid = (int)$_SESSION['usuario_id'];
+    $pdo = conectar_noticias();
+
+    if ($_POST['acao'] === 'curtir') {
+        $existe = $pdo->prepare("SELECT ativo FROM Curte_noticia WHERE usuario_id=:u AND noticia_id=:n");
+        $existe->execute([':u' => $uid, ':n' => $id]);
+        $row = $existe->fetch(PDO::FETCH_ASSOC);
+
+        if ($row !== false) {
+            $novoAtivo = $row['ativo'] ? 0 : 1;
+            $pdo->prepare("UPDATE Curte_noticia SET ativo=:a WHERE usuario_id=:u AND noticia_id=:n")
+                ->execute([':a' => $novoAtivo, ':u' => $uid, ':n' => $id]);
+        } else {
+            $pdo->prepare("INSERT INTO Curte_noticia (usuario_id, noticia_id, ativo) VALUES (:u,:n,1)")
+                ->execute([':u' => $uid, ':n' => $id]);
+        }
+    }
+
+    if ($_POST['acao'] === 'comentar') {
+        $comentario = trim($_POST['comentario'] ?? '');
+        if (strlen($comentario) >= 2) {
+            $pdo->prepare("
+                INSERT INTO Comentarios_noticias (comentario, noticia_id, usuario_id)
+                VALUES (:c, :n, :u)
+            ")->execute([':c' => $comentario, ':n' => $id, ':u' => $uid]);
+        }
+    }
+
+    header("Location: noticia.php?id=$id");
+    exit;
+}
+
+// ── Recarrega dados atualizados ───────────────────────────────────────────
+$noticia = buscar_noticia_por_id($id);
+
+// ── Busca comentários ─────────────────────────────────────────────────────
+$pdo  = conectar_noticias();
+$stmt = $pdo->prepare("
+    SELECT c.comentario, c.data, u.nome, u.avatar
+    FROM Comentarios_noticias c
+    JOIN usuarios u ON u.id = c.usuario_id
+    WHERE c.noticia_id = :n
+    ORDER BY c.data DESC
+");
+$stmt->execute([':n' => $id]);
+$comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ── Verifica se o usuário logado já curtiu ────────────────────────────────
+$usuario_curtiu = false;
+if (isset($_SESSION['usuario_id'])) {
+    $ck = $pdo->prepare("SELECT ativo FROM Curte_noticia WHERE usuario_id=:u AND noticia_id=:n");
+    $ck->execute([':u' => $_SESSION['usuario_id'], ':n' => $id]);
+    $ckRow = $ck->fetch(PDO::FETCH_ASSOC);
+    $usuario_curtiu = $ckRow && $ckRow['ativo'];
+}
+
+$usuario_logado = isset($_SESSION['usuario_id']);
+
 // Relacionadas
-$stmtRel = conectar_noticias()->prepare("
+$stmtRel = $pdo->prepare("
     SELECT id, titulo, imagem, categoria, data_publicacao
     FROM noticias WHERE categoria = :cat AND id != :id
     ORDER BY data_publicacao DESC LIMIT 3
@@ -49,6 +114,12 @@ include __DIR__ . '/../header.php';
     <i class="bi bi-arrow-left"></i> Voltar às notícias
   </a>
 
+  <?php if (isset($_GET['sucesso'])): ?>
+    <div class="alert alert-success mt-3">
+      <i class="bi bi-check-circle me-2"></i>Notícia publicada com sucesso!
+    </div>
+  <?php endif; ?>
+
   <div class="row g-4">
 
     <!-- ARTIGO -->
@@ -75,7 +146,7 @@ include __DIR__ . '/../header.php';
 
         <hr class="noticia-divisor">
 
-        <!-- DATA -->
+        <!-- META: DATA + STATS -->
         <div class="noticia-meta-data">
           <span>
             <i class="bi bi-calendar3 me-1"></i>
@@ -87,6 +158,10 @@ include __DIR__ . '/../header.php';
           </span>
           <span class="noticia-meta-sep">·</span>
           <span><i class="bi bi-eye me-1"></i><?= $noticia['visualizacoes'] ?> views</span>
+          <span class="noticia-meta-sep">·</span>
+          <span><i class="bi bi-heart me-1"></i><?= $noticia['curtidas'] ?> curtidas</span>
+          <span class="noticia-meta-sep">·</span>
+          <span><i class="bi bi-chat-dots me-1"></i><?= $noticia['comentarios'] ?> comentários</span>
         </div>
 
         <hr class="noticia-divisor">
@@ -131,6 +206,40 @@ include __DIR__ . '/../header.php';
           endforeach; ?>
         </div>
 
+        <!-- AÇÕES: curtir + stats -->
+        <div class="post-acoes">
+          <?php if ($usuario_logado): ?>
+            <form method="POST" style="display:inline;">
+              <input type="hidden" name="acao" value="curtir">
+              <button type="submit" class="btn-curtir <?= $usuario_curtiu ? 'curtido' : '' ?>">
+                <i class="bi <?= $usuario_curtiu ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
+                <?= $usuario_curtiu ? 'Curtido' : 'Curtir' ?>
+                <strong><?= $noticia['curtidas'] ?></strong>
+              </button>
+            </form>
+          <?php else: ?>
+            <span class="btn-curtir" style="cursor:default;opacity:.7;">
+              <i class="bi bi-heart"></i> <?= $noticia['curtidas'] ?> curtidas
+            </span>
+          <?php endif; ?>
+
+          <span class="stat-pill">
+            <i class="bi bi-chat-dots-fill"></i>
+            <?= $noticia['comentarios'] ?> comentário<?= $noticia['comentarios'] != 1 ? 's' : '' ?>
+          </span>
+
+          <span class="stat-pill">
+            <i class="bi bi-eye-fill"></i>
+            <?= $noticia['visualizacoes'] ?> visualização<?= $noticia['visualizacoes'] != 1 ? 'ões' : '' ?>
+          </span>
+
+          <?php if (!$usuario_logado): ?>
+            <span class="acoes-login-aviso">
+              <a href="../auth/login.php">Faça login</a> para curtir e comentar
+            </span>
+          <?php endif; ?>
+        </div>
+
         <!-- COMPARTILHAR -->
         <div class="noticia-compartilhar">
           <span class="noticia-compartilhar-label">Compartilhar:</span>
@@ -149,6 +258,58 @@ include __DIR__ . '/../header.php';
         </div>
 
       </article>
+
+      <!-- ── COMENTÁRIOS ── -->
+      <section class="comentarios-section">
+        <div class="comentarios-titulo">
+          <i class="bi bi-chat-square-dots-fill" style="color:#611DF2;"></i>
+          Comentários
+          <span><?= count($comentarios) ?></span>
+        </div>
+
+        <?php if ($usuario_logado): ?>
+          <form method="POST" class="form-comentario">
+            <input type="hidden" name="acao" value="comentar">
+            <img src="<?= htmlspecialchars($_SESSION['usuario_avatar'] ?? '../img/avatar-default.png') ?>"
+                 alt="Você" class="avatar-mini"
+                 onerror="this.src='../img/avatar-default.png'">
+            <textarea name="comentario"
+                      placeholder="Escreva um comentário..."
+                      required minlength="2"
+                      onkeydown="if(event.ctrlKey&&event.key==='Enter')this.form.submit()"></textarea>
+            <button type="submit" class="btn-enviar-comentario">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </form>
+        <?php else: ?>
+          <div class="aviso-login-comentar">
+            <a href="../auth/login.php">Faça login</a> para deixar um comentário
+          </div>
+        <?php endif; ?>
+
+        <?php if (empty($comentarios)): ?>
+          <div class="sem-comentarios">
+            <i class="bi bi-chat-square"></i>
+            Seja o primeiro a comentar!
+          </div>
+        <?php else: ?>
+          <?php foreach ($comentarios as $c): ?>
+            <div class="comentario-item">
+              <img src="<?= htmlspecialchars($c['avatar'] ?? '../img/avatar-default.png') ?>"
+                   alt="<?= htmlspecialchars($c['nome']) ?>"
+                   class="avatar-mini"
+                   onerror="this.src='../img/avatar-default.png'">
+              <div class="comentario-corpo">
+                <span class="comentario-autor"><?= htmlspecialchars($c['nome']) ?></span>
+                <span class="comentario-tempo tempo-relativo" data-publicacao="<?= $c['data'] ?>">
+                  <?= tempo_decorrido($c['data']) ?>
+                </span>
+                <p class="comentario-texto"><?= nl2br(htmlspecialchars($c['comentario'])) ?></p>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </section>
 
       <!-- RELACIONADAS -->
       <?php if (!empty($relacionadas)): ?>
@@ -187,7 +348,7 @@ include __DIR__ . '/../header.php';
       <div class="news-sidebar" style="top:90px;">
         <h4><i class="bi bi-fire me-2"></i>Mais Lidas</h4>
         <?php
-        $mais_lidas = conectar_noticias()->query("
+        $mais_lidas = $pdo->query("
             SELECT n.id, n.titulo, n.categoria,
                    COUNT(DISTINCT vn.usuario_id) AS visualizacoes
             FROM noticias n

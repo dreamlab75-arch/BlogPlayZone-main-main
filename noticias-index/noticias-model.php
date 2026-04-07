@@ -13,10 +13,14 @@ function buscar_noticias() {
     $pdo = conectar_noticias();
     return $pdo->query("
         SELECT n.*, u.nome AS autor_nome, u.avatar AS autor_avatar,
-               COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+               COUNT(DISTINCT vn.usuario_id) AS visualizacoes,
+               COUNT(DISTINCT cn.usuario_id) AS curtidas,
+               COUNT(DISTINCT co.id)         AS comentarios
         FROM noticias n
         JOIN usuarios u ON u.id = n.usuario_id
-        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        LEFT JOIN Visualiza_noticia vn    ON vn.noticia_id = n.id
+        LEFT JOIN Curte_noticia cn        ON cn.noticia_id = n.id AND cn.ativo = 1
+        LEFT JOIN Comentarios_noticias co ON co.noticia_id = n.id
         GROUP BY n.id ORDER BY n.data_publicacao DESC
     ");
 }
@@ -25,10 +29,14 @@ function buscar_noticias_recentes($limite = 5) {
     $pdo  = conectar_noticias();
     $stmt = $pdo->prepare("
         SELECT n.*, u.nome AS autor_nome, u.avatar AS autor_avatar,
-               COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+               COUNT(DISTINCT vn.usuario_id) AS visualizacoes,
+               COUNT(DISTINCT cn.usuario_id) AS curtidas,
+               COUNT(DISTINCT co.id)         AS comentarios
         FROM noticias n
         JOIN usuarios u ON u.id = n.usuario_id
-        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        LEFT JOIN Visualiza_noticia vn    ON vn.noticia_id = n.id
+        LEFT JOIN Curte_noticia cn        ON cn.noticia_id = n.id AND cn.ativo = 1
+        LEFT JOIN Comentarios_noticias co ON co.noticia_id = n.id
         GROUP BY n.id ORDER BY n.data_publicacao DESC LIMIT :limite
     ");
     $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
@@ -40,10 +48,14 @@ function buscar_destaques_semana($limite = 3) {
     $pdo  = conectar_noticias();
     $stmt = $pdo->prepare("
         SELECT n.*, u.nome AS autor_nome, u.avatar AS autor_avatar,
-               COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+               COUNT(DISTINCT vn.usuario_id) AS visualizacoes,
+               COUNT(DISTINCT cn.usuario_id) AS curtidas,
+               COUNT(DISTINCT co.id)         AS comentarios
         FROM noticias n
         JOIN usuarios u ON u.id = n.usuario_id
-        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        LEFT JOIN Visualiza_noticia vn    ON vn.noticia_id = n.id
+        LEFT JOIN Curte_noticia cn        ON cn.noticia_id = n.id AND cn.ativo = 1
+        LEFT JOIN Comentarios_noticias co ON co.noticia_id = n.id
         WHERE n.data_publicacao >= datetime('now', '-7 days')
         GROUP BY n.id ORDER BY visualizacoes DESC LIMIT :limite
     ");
@@ -56,10 +68,14 @@ function buscar_noticia_por_id($id) {
     $pdo  = conectar_noticias();
     $stmt = $pdo->prepare("
         SELECT n.*, u.nome AS autor_nome, u.avatar AS autor_avatar,
-               COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+               COUNT(DISTINCT vn.usuario_id) AS visualizacoes,
+               COUNT(DISTINCT cn.usuario_id) AS curtidas,
+               COUNT(DISTINCT co.id)         AS comentarios
         FROM noticias n
         JOIN usuarios u ON u.id = n.usuario_id
-        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        LEFT JOIN Visualiza_noticia vn    ON vn.noticia_id = n.id
+        LEFT JOIN Curte_noticia cn        ON cn.noticia_id = n.id AND cn.ativo = 1
+        LEFT JOIN Comentarios_noticias co ON co.noticia_id = n.id
         WHERE n.id = :id GROUP BY n.id
     ");
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -79,10 +95,14 @@ function buscar_noticias_paginadas($pagina = 1, $limite = 10, $categoria = '', $
 
     $stmt = $pdo->prepare("
         SELECT n.*, u.nome AS autor_nome, u.avatar AS autor_avatar,
-               COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+               COUNT(DISTINCT vn.usuario_id) AS visualizacoes,
+               COUNT(DISTINCT cn.usuario_id) AS curtidas,
+               COUNT(DISTINCT co.id)         AS comentarios
         FROM noticias n
         JOIN usuarios u ON u.id = n.usuario_id
-        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        LEFT JOIN Visualiza_noticia vn    ON vn.noticia_id = n.id
+        LEFT JOIN Curte_noticia cn        ON cn.noticia_id = n.id AND cn.ativo = 1
+        LEFT JOIN Comentarios_noticias co ON co.noticia_id = n.id
         $whereSQL
         GROUP BY n.id ORDER BY n.data_publicacao DESC
         LIMIT :limite OFFSET :offset

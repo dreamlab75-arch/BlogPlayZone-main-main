@@ -12,6 +12,10 @@ $total         = contar_noticias($categoria, $busca);
 $total_paginas = max(1, ceil($total / $limite));
 $categorias    = buscar_categorias();
 
+// Verifica se o usuário logado pode escrever notícias (adm=1 ou jornalista=3)
+$pode_escrever = isset($_SESSION['usuario_id']) &&
+                 in_array((int)($_SESSION['usuario_perfil_id'] ?? 0), [1, 3]);
+
 function qs_noticias($categoria, $busca) {
     $p = [];
     if ($categoria) $p[] = 'categoria=' . urlencode($categoria);
@@ -43,9 +47,16 @@ include __DIR__ . '/../header.php';
 
 <!-- HERO -->
 <div class="noticias-hero">
-  <div class="container">
-    <h1><i class="bi bi-newspaper me-2"></i>Notícias</h1>
-    <p>Fique por dentro de tudo que acontece no mundo dos games</p>
+  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+      <h1><i class="bi bi-newspaper me-2"></i>Notícias</h1>
+      <p class="mb-0">Fique por dentro de tudo que acontece no mundo dos games</p>
+    </div>
+    <?php if ($pode_escrever): ?>
+      <a href="escrever-noticia.php" class="btn-criar-noticia">
+        <i class="bi bi-plus-circle-fill"></i> Escrever Notícia
+      </a>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -218,7 +229,6 @@ include __DIR__ . '/../header.php';
           </div>
         </div>
         <?php endwhile; ?>
-
       </div>
     </div>
 

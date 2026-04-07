@@ -35,7 +35,7 @@ if (!isset($base)) $base = '';
           <a class="nav-link nav-link-playzone" href="<?= $base ?>noticias-index/noticias-view.php">Notícias</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-link-playzone" href="<?= $base ?>sobre.html">Sobre</a>
+          <a class="nav-link nav-link-playzone" href="<?= $base ?>quem-somos.php">Sobre</a>
         </li>
       </ul>
 

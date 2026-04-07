@@ -2,6 +2,9 @@
 require "noticias-model.php";
 
 $result_set_noticias = buscar_noticias_recentes(5);
+
+// Detecta se a sidebar está sendo incluída de fora da pasta noticias-index
+$_sidebar_prefix = (strpos($_SERVER['PHP_SELF'], 'noticias-index') !== false) ? '' : 'noticias-index/';
 ?>
 
 <?php while ($linha = $result_set_noticias->fetch(PDO::FETCH_ASSOC)): ?>
@@ -18,7 +21,7 @@ $result_set_noticias = buscar_noticias_recentes(5);
                 <?= tempo_decorrido($linha["data_publicacao"]) ?>
             </span>
         </div>
-        <a class="btn-ler-noticia" href="noticia.php?id=<?= $linha["id"] ?>">Ver mais</a>
+        <a class="btn-ler-noticia" href="<?= $_sidebar_prefix ?>noticia.php?id=<?= $linha["id"] ?>">Ver mais</a>
     </div>
 </div>
 

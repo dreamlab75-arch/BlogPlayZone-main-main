@@ -27,10 +27,11 @@ $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
 
 if ($usuario) {
     // Salva os dados do usuario na sessão
-    $_SESSION["usuario_id"]     = $usuario["id"];
-    $_SESSION["usuario_nome"]   = $usuario["nome"];
-    $_SESSION["usuario_perfil"] = $usuario["perfil_tipo"];
-    $_SESSION["usuario_avatar"] = $usuario["avatar"];
+    $_SESSION["usuario_id"]        = $usuario["id"];
+    $_SESSION["usuario_nome"]      = $usuario["nome"];
+    $_SESSION["usuario_perfil"]    = $usuario["perfil_tipo"];
+    $_SESSION["usuario_perfil_id"] = $usuario["perfil_id"];
+    $_SESSION["usuario_avatar"]    = $usuario["avatar"];
 
     
 
@@ -42,4 +43,3 @@ if ($usuario) {
     exit;
 }
 ?>
-

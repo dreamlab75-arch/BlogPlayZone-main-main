@@ -48,6 +48,26 @@ $posts = $stmtPosts->fetchAll(PDO::FETCH_ASSOC);
 
 // Busca todas as tags para o modal de edição
 $todasTags = buscar_tags();
+
+// Verifica se o usuário pode gerenciar notícias (adm=1 ou jornalista=3)
+$perfil_id_sessao = (int)($_SESSION['usuario_perfil_id'] ?? $usuario['perfil_id'] ?? 2);
+$pode_noticias = in_array($perfil_id_sessao, [1, 3]);
+
+// Busca notícias do usuário (apenas se tiver permissão)
+$noticias = [];
+if ($pode_noticias) {
+    require_once __DIR__ . '/../noticias-index/noticias-model.php';
+    $stmtNoticias = conectar_noticias()->prepare("
+        SELECT n.*, COUNT(DISTINCT vn.usuario_id) AS visualizacoes
+        FROM noticias n
+        LEFT JOIN Visualiza_noticia vn ON vn.noticia_id = n.id
+        WHERE n.usuario_id = :uid
+        GROUP BY n.id
+        ORDER BY n.data_publicacao DESC
+    ");
+    $stmtNoticias->execute([':uid' => $usuario_id]);
+    $noticias = $stmtNoticias->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -247,7 +267,7 @@ $todasTags = buscar_tags();
               </button>
               <button onclick="confirmarDeletar(<?= $post['id'] ?>, '<?= htmlspecialchars(addslashes($post['titulo'])) ?>')"
                       class="painel-btn-deletar" title="Deletar">
-                <i class="bi bi-trash-fill"></i> Excluir
+                <i class="bi bi-trash-fill"></i>
               </button>
             </div>
 
