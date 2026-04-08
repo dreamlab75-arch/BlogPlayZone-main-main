@@ -200,9 +200,6 @@ if ($pode_noticias) {
           <p class="resultado-info mb-0">
             <strong><?= count($posts) ?></strong> post<?= count($posts) != 1 ? 's' : '' ?> publicado<?= count($posts) != 1 ? 's' : '' ?>
           </p>
-          <a href="../posts-index/posts-view.php" class="btn-criar-post" style="font-size:.85rem;padding:8px 18px;">
-            <i class="bi bi-plus-circle-fill"></i> Novo Post
-          </a>
         </div>
 
         <div class="painel-posts-grid">
@@ -299,7 +296,7 @@ if ($pode_noticias) {
 
             <!-- Thumb -->
             <div class="painel-post-thumb"
-                 style="<?= $noticia['imagem'] ? 'background-image:url('.htmlspecialchars($noticia['imagem']).')' : '' ?>">
+                 style="<?= $noticia['imagem'] ? 'background-image:url('.htmlspecialchars(normalizar_imagem_noticia($noticia['imagem'])).')' : '' ?>">
               <?php if (!$noticia['imagem']): ?>
                 <i class="bi bi-newspaper"></i>
               <?php endif; ?>

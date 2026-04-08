@@ -26,30 +26,33 @@ if (empty($slides)) {
         <?php endforeach; ?>
       </div>
 
-      <!-- SLIDES -->
+      <!-- SLIDES — o slide inteiro é clicável -->
       <div class="carousel-inner">
         <?php foreach ($slides as $i => $slide): ?>
-          <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>"
-               style="background-image: url('<?= htmlspecialchars($slide['imagem']) ?>');">
+          <a href="noticias-index/noticia.php?id=<?= $slide['id'] ?>"
+             class="carousel-item <?= $i === 0 ? 'active' : '' ?>"
+             style="background-image: url('<?= htmlspecialchars(normalizar_imagem_noticia($slide['imagem'], '')) ?>');">
             <div class="carousel-caption">
               <span class="badge <?= categoria_para_badge($slide['categoria']) ?> mb-2">
                 <?= strtoupper($slide['categoria']) ?>
               </span>
               <h3><?= htmlspecialchars($slide['titulo']) ?></h3>
               <p><?= htmlspecialchars(mb_substr($slide['resumo'] ?: $slide['conteudo'], 0, 120)) ?>...</p>
-              <a href="noticias-index/noticia.php?id=<?= $slide['id'] ?>" class="btn-ler-noticia mt-2">
+              <span class="btn-ler-post mt-2" style="display:inline-block;">
                 Ler notícia <i class="bi bi-arrow-right ms-1"></i>
-              </a>
+              </span>
             </div>
-          </div>
+          </a>
         <?php endforeach; ?>
       </div>
 
-      <!-- BOTÕES -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <!-- BOTÕES (stopPropagation para não acionar o link do slide ao clicar nas setas) -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev"
+              onclick="event.preventDefault();event.stopPropagation();">
         <div class="carousel-btn"><i class="bi bi-chevron-left"></i></div>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next"
+              onclick="event.preventDefault();event.stopPropagation();">
         <div class="carousel-btn"><i class="bi bi-chevron-right"></i></div>
       </button>
 

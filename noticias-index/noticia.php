@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
         }
     }
 
-    header("Location: noticia.php?id=$id");
+    header("Location: noticia.php?id=$id", true, 303);
     exit;
 }
 
@@ -110,8 +110,19 @@ include __DIR__ . '/../header.php';
 
 <div class="container noticia-single-wrap">
 
-  <a href="noticias-view.php" class="btn-voltar">
-    <i class="bi bi-arrow-left"></i> Voltar às notícias
+  <?php
+  // Botão de voltar inteligente: preserva a página/filtro de onde o usuário veio
+  $voltar_url = 'noticias-view.php';
+  if (!empty($_SERVER['HTTP_REFERER'])) {
+      $ref = $_SERVER['HTTP_REFERER'];
+      // Aceita qualquer URL do próprio site que não seja a própria noticia.php
+      if (strpos($ref, 'noticia.php') === false && (strpos($ref, 'noticias') !== false || strpos($ref, 'index.php') !== false || strpos($ref, $_SERVER['HTTP_HOST']) !== false)) {
+          $voltar_url = htmlspecialchars($ref);
+      }
+  }
+  ?>
+  <a href="<?= $voltar_url ?>" class="btn-voltar">
+    <i class="bi bi-arrow-left"></i> Voltar
   </a>
 
   <?php if (isset($_GET['sucesso'])): ?>
@@ -157,11 +168,7 @@ include __DIR__ . '/../header.php';
             <?= tempo_decorrido($noticia['data_publicacao']) ?>
           </span>
           <span class="noticia-meta-sep">·</span>
-          <span><i class="bi bi-eye me-1"></i><?= $noticia['visualizacoes'] ?> views</span>
-          <span class="noticia-meta-sep">·</span>
-          <span><i class="bi bi-heart me-1"></i><?= $noticia['curtidas'] ?> curtidas</span>
-          <span class="noticia-meta-sep">·</span>
-          <span><i class="bi bi-chat-dots me-1"></i><?= $noticia['comentarios'] ?> comentários</span>
+          <span><i class="bi bi-eye me-1"></i><?= $noticia['visualizacoes'] ?> visualizações</span>
         </div>
 
         <hr class="noticia-divisor">
@@ -183,7 +190,7 @@ include __DIR__ . '/../header.php';
         <!-- IMAGEM DESTAQUE -->
         <?php if (!empty($noticia['imagem'])): ?>
           <figure class="noticia-figura">
-            <img src="<?= htmlspecialchars($noticia['imagem']) ?>"
+            <img src="<?= htmlspecialchars(normalizar_imagem_noticia($noticia['imagem'])) ?>"
                  alt="<?= htmlspecialchars($noticia['titulo']) ?>"
                  class="noticia-imagem-destaque"
                  onerror="this.style.display='none'">
@@ -198,7 +205,7 @@ include __DIR__ . '/../header.php';
             $p = trim($p);
             if ($p === '') continue;
             if ($primeiro): ?>
-              <p class="noticia-lead"><?= htmlspecialchars($p) ?></p>
+              <p class=""><?= htmlspecialchars($p) ?></p>
               <?php $primeiro = false;
             else: ?>
               <p><?= htmlspecialchars($p) ?></p>
@@ -226,11 +233,6 @@ include __DIR__ . '/../header.php';
           <span class="stat-pill">
             <i class="bi bi-chat-dots-fill"></i>
             <?= $noticia['comentarios'] ?> comentário<?= $noticia['comentarios'] != 1 ? 's' : '' ?>
-          </span>
-
-          <span class="stat-pill">
-            <i class="bi bi-eye-fill"></i>
-            <?= $noticia['visualizacoes'] ?> visualização<?= $noticia['visualizacoes'] != 1 ? 'ões' : '' ?>
           </span>
 
           <?php if (!$usuario_logado): ?>
@@ -379,15 +381,6 @@ include __DIR__ . '/../header.php';
         </div>
         <?php endwhile; ?>
 
-        <h4 class="mt-4"><i class="bi bi-tags me-2"></i>Categorias</h4>
-        <div class="d-flex flex-wrap gap-2 mt-2">
-          <?php foreach (buscar_categorias() as $cat): ?>
-            <a href="noticias-view.php?categoria=<?= urlencode($cat) ?>"
-               class="noticias-cat-pill <?= $noticia['categoria']===$cat?'ativa':'' ?>">
-              <?= htmlspecialchars(ucfirst($cat)) ?>
-            </a>
-          <?php endforeach; ?>
-        </div>
       </div>
     </div>
 

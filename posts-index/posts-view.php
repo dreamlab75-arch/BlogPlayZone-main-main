@@ -63,6 +63,10 @@ include __DIR__ . '/../header.php';
 
 <div class="container" style="max-width:960px; padding-bottom: 60px;">
 
+  <a href="../index.php" class="btn-voltar">
+    <i class="bi bi-arrow-left"></i> Voltar ao início
+  </a>
+
   <!-- FILTRO BAR -->
   <form method="GET" id="formFiltro" class="filtro-bar">
     <div class="row g-2 align-items-center">
@@ -185,7 +189,7 @@ include __DIR__ . '/../header.php';
       <div class="post-footer">
         <div class="post-stats">
           <span><i class="bi bi-heart-fill" style="color:#e74c3c;"></i> <?= $linha_posts['curtidas'] ?></span>
-          <span><i class="bi bi-chat-fill"></i> <?= $linha_posts['comentarios'] ?></span>
+          <span><i class="bi bi-chat-fill" style="color:#611df2;"></i> <?= $linha_posts['comentarios'] ?></span>
           <span><i class="bi bi-eye-fill"></i> <?= $linha_posts['visualizacoes'] ?></span>
         </div>
         <a class="btn-ler-post" href="post.php?id=<?= $linha_posts['id'] ?>">

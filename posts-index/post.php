@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
         }
     }
 
-    header("Location: post.php?id=$id");
+    header("Location: post.php?id=$id", true, 303);
     exit;
 }
 
@@ -113,8 +113,17 @@ include __DIR__ . '/../header.php';
   <div class="post-single-wrap">
 
     <!-- VOLTAR -->
-    <a href="posts-view.php" class="btn-voltar">
-      <i class="bi bi-arrow-left"></i> Voltar aos posts
+    <?php
+    $voltar_url = 'posts-view.php';
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $ref = $_SERVER['HTTP_REFERER'];
+        if (strpos($ref, 'post.php') === false && (strpos($ref, 'posts') !== false || strpos($ref, 'index.php') !== false || strpos($ref, $_SERVER['HTTP_HOST']) !== false)) {
+            $voltar_url = htmlspecialchars($ref);
+        }
+    }
+    ?>
+    <a href="<?= $voltar_url ?>" class="btn-voltar">
+      <i class="bi bi-arrow-left"></i> Voltar
     </a>
 
     <!-- CARD PRINCIPAL -->
@@ -147,9 +156,7 @@ include __DIR__ . '/../header.php';
                 <?= tempo_decorrido_posts($post['data_publicacao']) ?>
               </span>
             </span>
-            <span><i class="bi bi-eye"></i> <?= $post['visualizacoes'] ?> visualizações</span>
-            <span><i class="bi bi-heart"></i> <?= $post['curtidas'] ?> curtidas</span>
-          </small>
+            <span><i class="bi bi-eye"></i> <?= $post['visualizacoes'] ?> visualizações</span>          </small>
         </div>
       </div>
 
@@ -195,11 +202,6 @@ include __DIR__ . '/../header.php';
         <span class="stat-pill">
           <i class="bi bi-chat-dots-fill"></i>
           <?= $post['comentarios'] ?> comentário<?= $post['comentarios'] != 1 ? 's' : '' ?>
-        </span>
-
-        <span class="stat-pill">
-          <i class="bi bi-eye-fill"></i>
-          <?= $post['visualizacoes'] ?> visualização<?= $post['visualizacoes'] != 1 ? 'ões' : '' ?>
         </span>
 
         <?php if (!$usuario_logado): ?>

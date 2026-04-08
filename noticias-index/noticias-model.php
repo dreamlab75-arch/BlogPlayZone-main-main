@@ -167,7 +167,7 @@ function categoria_para_badge($categoria) {
         'análise'     => 'bg-info text-white',
         'urgente'     => 'bg-danger text-white',
         'review'      => 'bg-success text-white',
-        'prévia'      => 'bg-purple text-white',
+        'prévia'      => 'bg-secondary text-white',
         'atualização' => 'bg-secondary text-white',
         'evento'      => 'bg-dark text-white',
         'hardware'    => 'bg-warning text-dark',
@@ -188,4 +188,14 @@ function categoria_para_cor($categoria) {
         'curiosidade' => '#0dcaf0', 'lista'       => '#0d6efd',
     ];
     return $mapa[mb_strtolower(trim($categoria))] ?? '#611DF2';
+}
+// Normaliza o caminho de imagem para uso em subpastas (ex: noticias-index/, perfil/)
+// Imagens salvas como "img/foto.png" precisam de "../" quando acessadas de subpastas
+function normalizar_imagem_noticia($imagem, $prefixo = '../') {
+    if (empty($imagem)) return '';
+    // Se já começa com http, é URL externa — não muda
+    if (str_starts_with($imagem, 'http')) return $imagem;
+    // Se começa com "img/" é path relativo à raiz — adiciona prefixo
+    if (str_starts_with($imagem, 'img/')) return $prefixo . $imagem;
+    return $imagem;
 }

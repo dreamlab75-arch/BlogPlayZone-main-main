@@ -34,9 +34,10 @@
     <div class="post-footer">
         <div class="post-stats">
             <span><i class="bi bi-heart-fill" style="color:#e74c3c;"></i> <?= $linha_posts["curtidas"] ?></span>
-            <span><i class="bi bi-chat-fill"></i> <?= $linha_posts["comentarios"] ?></span>
+            <span><i class="bi bi-chat-fill" style="color:#611df2;"></i> <?= $linha_posts["comentarios"] ?></span>
             <span><i class="bi bi-eye-fill"></i> <?= $linha_posts["visualizacoes"] ?></span>
         </div>
+        
 
         <a class="btn-ler-post" href="posts-index/post.php?id=<?= $linha_posts["id"] ?>">
             Ler post <i class="bi bi-arrow-right ms-1"></i>

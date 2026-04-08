@@ -61,6 +61,9 @@ include __DIR__ . '/../header.php';
 </div>
 
 <div class="container noticias-page-wrap">
+  <a href="../index.php" class="btn-voltar">
+    <i class="bi bi-arrow-left"></i> Voltar ao início
+  </a>
   <div class="row g-4">
 
     <!-- COLUNA PRINCIPAL -->
@@ -151,7 +154,11 @@ include __DIR__ . '/../header.php';
                 <?= tempo_decorrido($n['data_publicacao']) ?>
               </span>
               <span class="noticias-meta-sep">·</span>
-              <span><i class="bi bi-eye"></i> <?= $n['visualizacoes'] ?></span>
+              <span><i class="bi bi-eye-fill"></i> <?= $n['visualizacoes'] ?></span>
+              <span class="noticias-meta-sep">·</span>
+              <span><i class="bi bi-heart-fill" style="color:#e74c3c;"></i> <?= $n['curtidas'] ?></span>
+              <span class="noticias-meta-sep">·</span>
+              <span><i class="bi bi-chat-fill" style="color:#611DF2;"></i> <?= $n['comentarios'] ?></span>
             </div>
           </div>
         </article>
