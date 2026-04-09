@@ -21,14 +21,15 @@ function buscar_posts() {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
+            (SELECT GROUP_CONCAT(t2.nome, ',')
+             FROM post_tag pt2
+             JOIN tags t2 ON t2.id = pt2.tag_id
+             WHERE pt2.post_id = p.id)      AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
         FROM posts p
         JOIN usuarios u         ON u.id = p.usuario_id
-        LEFT JOIN post_tag pt   ON pt.post_id = p.id
-        LEFT JOIN tags t        ON t.id = pt.tag_id
         LEFT JOIN Curte_post cp ON cp.post_id = p.id AND cp.ativo = 1
         LEFT JOIN Comentarios_posts co ON co.post_id = p.id
         LEFT JOIN Visualiza_post vp ON vp.post_id = p.id
@@ -49,14 +50,15 @@ function buscar_posts_em_alta($limite = 3) {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
+            (SELECT GROUP_CONCAT(t2.nome, ',')
+             FROM post_tag pt2
+             JOIN tags t2 ON t2.id = pt2.tag_id
+             WHERE pt2.post_id = p.id)      AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
         FROM posts p
         JOIN usuarios u         ON u.id = p.usuario_id
-        LEFT JOIN post_tag pt   ON pt.post_id = p.id
-        LEFT JOIN tags t        ON t.id = pt.tag_id
         LEFT JOIN Curte_post cp ON cp.post_id = p.id AND cp.ativo = 1
         LEFT JOIN Comentarios_posts co ON co.post_id = p.id
         LEFT JOIN Visualiza_post vp ON vp.post_id = p.id
@@ -81,14 +83,15 @@ function buscar_post_por_id($id) {
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
+            (SELECT GROUP_CONCAT(t2.nome, ',')
+             FROM post_tag pt2
+             JOIN tags t2 ON t2.id = pt2.tag_id
+             WHERE pt2.post_id = p.id)      AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
         FROM posts p
         JOIN usuarios u         ON u.id = p.usuario_id
-        LEFT JOIN post_tag pt   ON pt.post_id = p.id
-        LEFT JOIN tags t        ON t.id = pt.tag_id
         LEFT JOIN Curte_post cp ON cp.post_id = p.id AND cp.ativo = 1
         LEFT JOIN Comentarios_posts co ON co.post_id = p.id
         LEFT JOIN Visualiza_post vp ON vp.post_id = p.id
@@ -100,7 +103,7 @@ function buscar_post_por_id($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// ── NOVO: paginação com filtros ──────────────────────────────────────────────
+// ── Paginação com filtros ────────────────────────────────────────────────────
 function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', $busca = '', $tags = []) {
     $pdo    = conectar();
     $offset = ($pagina - 1) * $limite;
@@ -109,7 +112,27 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
     if ($ordem === 'antigos') $orderBy = "p.data_publicacao ASC";
     if ($ordem === 'vistos')  $orderBy = "visualizacoes DESC";
 
-    [$whereSQL, $params, $tagValues] = _montar_where($busca, $tags);
+    // Filtro de busca e tag — usa subquery para não afetar o GROUP_CONCAT de tags
+    $where  = [];
+    $params = [];
+
+    if ($busca) {
+        $where[]          = "p.titulo LIKE :busca";
+        $params[':busca'] = "%$busca%";
+    }
+
+    if (!empty($tags)) {
+        // Filtra posts que tenham ao menos uma das tags selecionadas
+        // usando EXISTS com subquery — independente do JOIN de tags para exibição
+        $tagPlaceholders = implode(',', array_fill(0, count($tags), '?'));
+        $where[] = "EXISTS (
+            SELECT 1 FROM post_tag pt_f
+            JOIN tags t_f ON t_f.id = pt_f.tag_id
+            WHERE pt_f.post_id = p.id AND t_f.nome IN ($tagPlaceholders)
+        )";
+    }
+
+    $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
 
     $sql = "
         SELECT
@@ -120,14 +143,15 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
             p.data_publicacao,
             u.nome                          AS autor,
             u.avatar                        AS avatar,
-            GROUP_CONCAT(DISTINCT t.nome)   AS tags,
+            (SELECT GROUP_CONCAT(t2.nome, ',')
+             FROM post_tag pt2
+             JOIN tags t2 ON t2.id = pt2.tag_id
+             WHERE pt2.post_id = p.id)      AS tags,
             COUNT(DISTINCT cp.usuario_id)   AS curtidas,
             COUNT(DISTINCT co.id)           AS comentarios,
             COUNT(DISTINCT vp.usuario_id)   AS visualizacoes
         FROM posts p
         JOIN usuarios u         ON u.id = p.usuario_id
-        LEFT JOIN post_tag pt   ON pt.post_id = p.id
-        LEFT JOIN tags t        ON t.id = pt.tag_id
         LEFT JOIN Curte_post cp ON cp.post_id = p.id AND cp.ativo = 1
         LEFT JOIN Comentarios_posts co ON co.post_id = p.id
         LEFT JOIN Visualiza_post vp ON vp.post_id = p.id
@@ -139,55 +163,48 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
 
     $stmt = $pdo->prepare($sql);
     foreach ($params as $k => $v) $stmt->bindValue($k, $v);
-    foreach ($tagValues as $i => $v) $stmt->bindValue($i + 1, $v); // posicionais para tags
+    // Bind posicional para as tags (placeholders '?')
+    foreach (array_values($tags) as $i => $v) $stmt->bindValue($i + 1, $v);
     $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt;
 }
 
-// ── NOVO: conta total de posts (para paginação) ──────────────────────────────
+// ── Conta total de posts (para paginação) ───────────────────────────────────
 function contar_posts($busca = '', $tags = []) {
-    $pdo = conectar();
+    $pdo    = conectar();
+    $where  = [];
+    $params = [];
 
-    [$whereSQL, $params, $tagValues] = _montar_where($busca, $tags);
+    if ($busca) {
+        $where[]          = "p.titulo LIKE :busca";
+        $params[':busca'] = "%$busca%";
+    }
 
-    // Subconsulta para contar posts distintos com os filtros
+    if (!empty($tags)) {
+        $tagPlaceholders = implode(',', array_fill(0, count($tags), '?'));
+        $where[] = "EXISTS (
+            SELECT 1 FROM post_tag pt_f
+            JOIN tags t_f ON t_f.id = pt_f.tag_id
+            WHERE pt_f.post_id = p.id AND t_f.nome IN ($tagPlaceholders)
+        )";
+    }
+
+    $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
+
     $sql = "
         SELECT COUNT(DISTINCT p.id) AS total
         FROM posts p
-        JOIN usuarios u         ON u.id = p.usuario_id
-        LEFT JOIN post_tag pt   ON pt.post_id = p.id
-        LEFT JOIN tags t        ON t.id = pt.tag_id
+        JOIN usuarios u ON u.id = p.usuario_id
         $whereSQL
     ";
 
     $stmt = $pdo->prepare($sql);
     foreach ($params as $k => $v) $stmt->bindValue($k, $v);
-    foreach ($tagValues as $i => $v) $stmt->bindValue($i + 1, $v);
+    foreach (array_values($tags) as $i => $v) $stmt->bindValue($i + 1, $v);
     $stmt->execute();
     return (int)$stmt->fetchColumn();
-}
-
-// ── Helper interno: monta WHERE reutilizável ────────────────────────────────
-function _montar_where($busca, $tags) {
-    $where      = [];
-    $params     = [];
-    $tagValues  = [];
-
-    if ($busca) {
-        $where[]         = "p.titulo LIKE :busca";
-        $params[':busca'] = "%$busca%";
-    }
-
-    if (!empty($tags)) {
-        $placeholders = implode(',', array_fill(0, count($tags), '?'));
-        $where[]      = "t.nome IN ($placeholders)";
-        $tagValues    = array_values($tags);
-    }
-
-    $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
-    return [$whereSQL, $params, $tagValues];
 }
 
 function buscar_tags() {

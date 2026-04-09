@@ -502,7 +502,7 @@ body {
 .sobre-section {
   background: linear-gradient(135deg, #1a0a4a 0%, #611df2 50%, #7957f2 100%);
   padding: 60px 0;
-  margin-top: 60px;
+  margin-top: 26px;
 }
 .sobre-section .section-title--light {
   color: white;
@@ -879,7 +879,7 @@ body {
 
 /* ========== POSTS-VIEW ========== */
 .posts-page-hero {
-  background: linear-gradient(135deg, #611df2 0%, #7957f2 60%, #35f2df 100%);
+  background: linear-gradient(135deg, #1a0a4a 0%, #611df2 60%, #35f2df 100%);
   padding: 48px 0 36px;
   margin-bottom: 36px;
   position: relative;
