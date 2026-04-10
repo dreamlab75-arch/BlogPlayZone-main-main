@@ -122,14 +122,16 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
     }
 
     if (!empty($tags)) {
-        // Filtra posts que tenham ao menos uma das tags selecionadas
-        // usando EXISTS com subquery — independente do JOIN de tags para exibição
-        $tagPlaceholders = implode(',', array_fill(0, count($tags), '?'));
-        $where[] = "EXISTS (
-            SELECT 1 FROM post_tag pt_f
-            JOIN tags t_f ON t_f.id = pt_f.tag_id
-            WHERE pt_f.post_id = p.id AND t_f.nome IN ($tagPlaceholders)
-        )";
+        // Post deve ter TODAS as tags selecionadas (AND) — um EXISTS por tag
+        foreach (array_values($tags) as $i => $tagNome) {
+            $placeholder     = ":tag_$i";
+            $where[]         = "EXISTS (
+                SELECT 1 FROM post_tag pt_f
+                JOIN tags t_f ON t_f.id = pt_f.tag_id
+                WHERE pt_f.post_id = p.id AND t_f.nome = $placeholder
+            )";
+            $params[$placeholder] = $tagNome;
+        }
     }
 
     $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
@@ -163,8 +165,6 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
 
     $stmt = $pdo->prepare($sql);
     foreach ($params as $k => $v) $stmt->bindValue($k, $v);
-    // Bind posicional para as tags (placeholders '?')
-    foreach (array_values($tags) as $i => $v) $stmt->bindValue($i + 1, $v);
     $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
@@ -183,12 +183,15 @@ function contar_posts($busca = '', $tags = []) {
     }
 
     if (!empty($tags)) {
-        $tagPlaceholders = implode(',', array_fill(0, count($tags), '?'));
-        $where[] = "EXISTS (
-            SELECT 1 FROM post_tag pt_f
-            JOIN tags t_f ON t_f.id = pt_f.tag_id
-            WHERE pt_f.post_id = p.id AND t_f.nome IN ($tagPlaceholders)
-        )";
+        foreach (array_values($tags) as $i => $tagNome) {
+            $placeholder     = ":tag_$i";
+            $where[]         = "EXISTS (
+                SELECT 1 FROM post_tag pt_f
+                JOIN tags t_f ON t_f.id = pt_f.tag_id
+                WHERE pt_f.post_id = p.id AND t_f.nome = $placeholder
+            )";
+            $params[$placeholder] = $tagNome;
+        }
     }
 
     $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
@@ -202,7 +205,6 @@ function contar_posts($busca = '', $tags = []) {
 
     $stmt = $pdo->prepare($sql);
     foreach ($params as $k => $v) $stmt->bindValue($k, $v);
-    foreach (array_values($tags) as $i => $v) $stmt->bindValue($i + 1, $v);
     $stmt->execute();
     return (int)$stmt->fetchColumn();
 }
