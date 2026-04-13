@@ -27,7 +27,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// Verifica se email já está em uso por outro usuário
 $stmtEmail = $pdo->prepare("SELECT id FROM usuarios WHERE email = :email AND id != :id");
 $stmtEmail->execute([':email' => $email, ':id' => $usuario_id]);
 if ($stmtEmail->fetch()) {
@@ -35,7 +34,6 @@ if ($stmtEmail->fetch()) {
     exit;
 }
 
-// Monta a query de update
 $campos  = "nome = :nome, email = :email, avatar = :avatar, bio = :bio";
 $params  = [
     ':nome'       => $nome,

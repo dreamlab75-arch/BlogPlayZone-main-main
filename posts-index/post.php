@@ -64,11 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     exit;
 }
 
-// ── Recarrega dados atualizados após possível visualização/curtida ──────────
 $post = buscar_post_por_id($id);
 $tags = $post['tags'] ? explode(',', $post['tags']) : [];
 
-// ── Busca comentários ───────────────────────────────────────────────────────
 $pdo  = conectar();
 $stmt = $pdo->prepare("
     SELECT c.comentario, c.data, u.nome, u.avatar
@@ -80,7 +78,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([':p' => $id]);
 $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ── Verifica se o usuário logado já curtiu ──────────────────────────────────
 $usuario_curtiu = false;
 if (isset($_SESSION['usuario_id'])) {
     $ck = $pdo->prepare("SELECT ativo FROM Curte_post WHERE usuario_id=:u AND post_id=:p");

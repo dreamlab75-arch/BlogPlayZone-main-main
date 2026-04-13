@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Só usuários logados podem criar posts
 if (!isset($_SESSION['usuario_id'])) {
     header('Location: ../auth/login.php');
     exit;
@@ -19,7 +18,6 @@ $conteudo = trim($_POST['conteudo'] ?? '');
 $imagem   = trim($_POST['imagem']   ?? '');
 $tags_ids = $_POST['tags_post']     ?? [];
 
-// Validações básicas
 if (strlen($titulo) < 5) {
     header('Location: posts-view.php?erro=' . urlencode('Título muito curto (mínimo 5 caracteres).'));
     exit;
@@ -28,7 +26,6 @@ if (strlen($conteudo) < 50) {
     header('Location: posts-view.php?erro=' . urlencode('Conteúdo muito curto (mínimo 50 caracteres).'));
     exit;
 }
-// Máximo 5 tags
 $tags_ids = array_slice(array_map('intval', $tags_ids), 0, 5);
 
 $usuario_id = (int)$_SESSION['usuario_id'];

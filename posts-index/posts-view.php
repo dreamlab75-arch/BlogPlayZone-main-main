@@ -13,7 +13,6 @@ $total_posts      = contar_posts($busca, $tagsFiltro);
 $total_paginas    = max(1, ceil($total_posts / $limite));
 $tagsDisponiveis  = buscar_tags();
 
-// Monta query string base (sem page) para paginação
 function query_sem_page($busca, $ordem, $tagsFiltro) {
     $params = [];
     if ($busca)              $params[] = 'busca=' . urlencode($busca);
