@@ -19,7 +19,6 @@ $base = '';
 <body>
 <?php include __DIR__ . '/header.php'; ?>
 
-<!-- HERO -->
 <div class="sobre-section" style="margin: top 8px;">
   <div class="container text-center py-2">
     <h1 class="section-title--light fw-bold mb-2" style="color:#fff;font-size:2.4rem;">
@@ -37,7 +36,6 @@ $base = '';
     <i class="bi bi-arrow-left"></i> Voltar ao início
   </a>
 
-  <!-- O QUE É -->
   <div class="noticia-artigo mb-4">
 
     <div class="d-flex align-items-center gap-3 mb-3">
@@ -59,7 +57,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- MISSÃO E VALORES -->
   <div class="row g-4 mb-4">
     <div class="col-md-4">
       <div class="sobre-card">
@@ -84,7 +81,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- O QUE VOCÊ ENCONTRA -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span style="font-size:2.2rem;">📰</span>
@@ -112,7 +108,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- COMO PARTICIPAR -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span style="font-size:2.2rem;">✍️</span>
@@ -143,7 +138,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- CONTATO -->
   <div class="noticia-artigo">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span style="font-size:2.2rem;">📬</span>

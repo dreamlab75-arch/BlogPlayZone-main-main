@@ -1,15 +1,11 @@
 <?php
-// ============================================================
-// MODEL — responsável pela conexão e consultas ao banco
-// ============================================================
-
 function conectar() {
     $pdo = new PDO("sqlite:" . __DIR__ . "/../banco.db");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $pdo;
 }
 
-// Retorna todos os posts com autor, avatar, tags e contagens
+
 function buscar_posts() {
     $pdo = conectar();
     return $pdo->query("
@@ -38,7 +34,7 @@ function buscar_posts() {
     ");
 }
 
-// Retorna apenas os N primeiros posts (para o índice)
+
 function buscar_posts_em_alta($limite = 3) {
     $pdo = conectar();
     $stmt = $pdo->prepare("
@@ -71,7 +67,7 @@ function buscar_posts_em_alta($limite = 3) {
     return $stmt;
 }
 
-// Retorna um post pelo ID
+
 function buscar_post_por_id($id) {
     $pdo = conectar();
     $stmt = $pdo->prepare("
@@ -103,7 +99,7 @@ function buscar_post_por_id($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// ── Paginação com filtros ────────────────────────────────────────────────────
+
 function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', $busca = '', $tags = []) {
     $pdo    = conectar();
     $offset = ($pagina - 1) * $limite;
@@ -112,7 +108,7 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
     if ($ordem === 'antigos') $orderBy = "p.data_publicacao ASC";
     if ($ordem === 'vistos')  $orderBy = "visualizacoes DESC";
 
-    // Filtro de busca e tag — usa subquery para não afetar o GROUP_CONCAT de tags
+
     $where  = [];
     $params = [];
 
@@ -122,7 +118,7 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
     }
 
     if (!empty($tags)) {
-        // Post deve ter TODAS as tags selecionadas (AND) — um EXISTS por tag
+
         foreach (array_values($tags) as $i => $tagNome) {
             $placeholder     = ":tag_$i";
             $where[]         = "EXISTS (
@@ -171,7 +167,7 @@ function buscar_posts_paginados($pagina = 1, $limite = 10, $ordem = 'recentes', 
     return $stmt;
 }
 
-// ── Conta total de posts (para paginação) ───────────────────────────────────
+
 function contar_posts($busca = '', $tags = []) {
     $pdo    = conectar();
     $where  = [];
@@ -214,7 +210,7 @@ function buscar_tags() {
     return $pdo->query("SELECT id, nome FROM tags ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// ── Tempo decorrido (posts) ─────────────────────────────────────────────────
+
 function tempo_decorrido_posts($data_publicacao) {
     $agora     = new DateTime('now',  new DateTimeZone('UTC'));
     $publicado = new DateTime($data_publicacao, new DateTimeZone('UTC'));

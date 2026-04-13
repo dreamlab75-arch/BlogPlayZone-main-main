@@ -17,7 +17,6 @@ if (!$post_id) {
     exit;
 }
 
-// Garante que o post pertence ao usuário logado (ou é adm)
 $stmt = $pdo->prepare("SELECT usuario_id FROM posts WHERE id = :id");
 $stmt->execute([':id' => $post_id]);
 $post = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -4,19 +4,17 @@ $email  = $_POST["email"];
 $senha  = $_POST["senha"];
 $avatar = $_POST["avatar"] ?: "img/avatar-default.png";
 
-// Validação básica
+
 if (strlen($senha) < 6) {
     header("Location: cadastro.php?erro=A senha deve ter no mínimo 6 caracteres");
     exit;
 }
 
-// Hash da senha
 $senha_hash = hash("sha256", $senha);
 
 $string_de_conexao = "sqlite:../banco.db";
 $pdo = new \PDO($string_de_conexao);
 
-// Verifica se email já existe
 $sql_verifica = "SELECT id FROM usuarios WHERE email = :email";
 $stmt_verifica = $pdo->prepare($sql_verifica);
 $stmt_verifica->bindValue(":email", $email);
@@ -27,7 +25,6 @@ if ($stmt_verifica->fetch()) {
     exit;
 }
 
-// Insere o novo usuario com perfil de leitor (id=2) por padrão
 $sql = "
     INSERT INTO usuarios (nome, email, senha, avatar, perfil_id)
     VALUES (:nome, :email, :senha, :avatar, 2)

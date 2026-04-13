@@ -212,7 +212,6 @@ include __DIR__ . '/../header.php';
       </div>
     </article>
 
-    <!-- ── COMENTÁRIOS ── -->
     <section class="comentarios-section">
       <div class="comentarios-titulo">
         <i class="bi bi-chat-square-dots-fill" style="color:#611DF2;"></i>
@@ -220,7 +219,6 @@ include __DIR__ . '/../header.php';
         <span><?= count($comentarios) ?></span>
       </div>
 
-      <!-- Form comentar -->
       <?php if ($usuario_logado): ?>
         <form method="POST" class="form-comentario">
           <input type="hidden" name="acao" value="comentar">
@@ -241,7 +239,6 @@ include __DIR__ . '/../header.php';
         </div>
       <?php endif; ?>
 
-      <!-- Lista de comentários -->
       <?php if (empty($comentarios)): ?>
         <div class="sem-comentarios">
           <i class="bi bi-chat-square"></i>
@@ -266,8 +263,8 @@ include __DIR__ . '/../header.php';
       <?php endif; ?>
     </section>
 
-  </div><!-- /post-single-wrap -->
-</div><!-- /container -->
+  </div>
+</div>
 
 <template hx-get="footer.html" hx-target="#footer" hx-trigger="load"></template>
 <div id="footer"></div>

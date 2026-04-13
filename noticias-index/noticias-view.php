@@ -12,7 +12,6 @@ $total         = contar_noticias($categoria, $busca);
 $total_paginas = max(1, ceil($total / $limite));
 $categorias    = buscar_categorias();
 
-// Verifica se o usuário logado pode escrever notícias (adm=1 ou jornalista=3)
 $pode_escrever = isset($_SESSION['usuario_id']) &&
                  in_array((int)($_SESSION['usuario_perfil_id'] ?? 0), [1, 3]);
 
@@ -45,7 +44,6 @@ $base = '../';
 include __DIR__ . '/../header.php';
 ?>
 
-<!-- HERO -->
 <div class="noticias-hero">
   <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
@@ -66,10 +64,8 @@ include __DIR__ . '/../header.php';
   </a>
   <div class="row g-4">
 
-    <!-- COLUNA PRINCIPAL -->
     <div class="col-lg-8">
 
-      <!-- FILTROS -->
       <form method="GET" class="filtro-bar">
         <div class="row g-2 align-items-center">
           <div class="col-md-6">
@@ -116,14 +112,12 @@ include __DIR__ . '/../header.php';
         <?php endif; ?>
       </form>
 
-      <!-- RESULTADO INFO -->
       <div class="resultado-info">
         <strong><?= $total ?></strong> notícia<?= $total!=1?'s':'' ?>
         <?= $categoria ? ' em <strong>'.htmlspecialchars(ucfirst($categoria)).'</strong>' : '' ?>
         · Página <strong><?= $pagina ?></strong> de <strong><?= $total_paginas ?></strong>
       </div>
 
-      <!-- LISTA -->
       <?php
       $encontrou = false;
       while ($n = $resultado->fetch(PDO::FETCH_ASSOC)):
@@ -172,7 +166,6 @@ include __DIR__ . '/../header.php';
         </div>
       <?php endif; ?>
 
-      <!-- PAGINAÇÃO -->
       <?php if ($total_paginas > 1): ?>
       <nav class="paginacao">
         <?php if ($pagina > 1): ?>
@@ -200,9 +193,8 @@ include __DIR__ . '/../header.php';
       </nav>
       <?php endif; ?>
 
-    </div><!-- /col-lg-8 -->
+    </div>
 
-    <!-- SIDEBAR -->
     <div class="col-lg-4">
       <div class="news-sidebar" style="top:90px;">
         <h4><i class="bi bi-fire me-2"></i>Mais Lidas</h4>

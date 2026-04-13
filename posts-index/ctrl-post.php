@@ -37,7 +37,6 @@ $pdo = conectar();
 $pdo->beginTransaction();
 
 try {
-    // Insere o post
     $stmt = $pdo->prepare("
         INSERT INTO posts (titulo, conteudo, imagem, usuario_id)
         VALUES (:titulo, :conteudo, :imagem, :usuario_id)
@@ -50,7 +49,6 @@ try {
     ]);
     $post_id = $pdo->lastInsertId();
 
-    // Insere as tags
     if (!empty($tags_ids)) {
         $stmtTag = $pdo->prepare("
             INSERT OR IGNORE INTO post_tag (post_id, tag_id) VALUES (:post_id, :tag_id)

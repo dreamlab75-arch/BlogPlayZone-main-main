@@ -877,7 +877,6 @@ body {
   margin-top: 32px;
 }
 
-/* ========== POSTS-VIEW ========== */
 .posts-page-hero {
   background: linear-gradient(135deg, #1a0a4a 0%, #611df2 60%, #35f2df 100%);
   padding: 48px 0 36px;
@@ -904,7 +903,6 @@ body {
   font-size: 1rem;
 }
 
-/* ===== FILTRO BAR ===== */
 .filtro-bar {
   background: white;
   border-radius: 14px;
@@ -1040,7 +1038,6 @@ body {
   opacity: 1;
 }
 
-/* ===== RESULTADO INFO ===== */
 .resultado-info {
   color: #888;
   font-size: 0.9rem;
@@ -1050,7 +1047,6 @@ body {
   color: #611df2;
 }
 
-/* ===== PAGINAÇÃO ===== */
 .paginacao {
   display: flex;
   justify-content: center;
@@ -1098,7 +1094,6 @@ body {
   gap: 5px;
 }
 
-/* ===== MODAL CRIAR POST ===== */
 .modal-criar-overlay {
   display: none;
   position: fixed;
@@ -1283,7 +1278,6 @@ body {
   font-size: 0.8rem;
 }
 
-/* ========== POST ÚNICO (post.php) ========== */
 .post-single-wrap {
   max-width: 780px;
   margin: 0 auto;
@@ -1431,7 +1425,6 @@ body {
   text-decoration: none;
 }
 
-/* ===== COMENTÁRIOS ===== */
 .comentarios-section {
   margin-top: 40px;
   background: white;
@@ -1573,7 +1566,6 @@ body {
   margin-bottom: 8px;
 }
 
-/* ========== PAINEL USUÁRIO ========== */
 .painel-body {
   background: #f4f3ff;
   min-height: 100vh;
@@ -1584,7 +1576,6 @@ body {
   min-height: 100vh;
 }
 
-/* ── SIDEBAR ── */
 .painel-sidebar {
   width: 260px;
   min-height: 100vh;
@@ -1598,7 +1589,6 @@ body {
   overflow-y: auto;
 }
 
-/* Perfil no topo da sidebar */
 .painel-sidebar-perfil {
   text-align: center;
   padding-bottom: 24px;
@@ -1641,7 +1631,6 @@ body {
   word-break: break-word;
 }
 
-/* Stats rápidas */
 .painel-sidebar-stats {
   display: flex;
   justify-content: space-around;
@@ -1668,12 +1657,9 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Nav */
 .painel-nav {
   flex: 1;
 }
-
-/* ── MAIN ── */
 .painel-main {
   margin-left: 260px;
   flex: 1;
@@ -1681,7 +1667,6 @@ body {
   min-height: 100vh;
 }
 
-/* Header dos posts */
 .painel-posts-header {
   display: flex;
   align-items: center;
@@ -1691,14 +1676,12 @@ body {
   gap: 12px;
 }
 
-/* Grid de posts */
 .painel-posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
 }
 
-/* Card de post */
 .painel-post-card {
   background: white;
   border-radius: 16px;
@@ -1713,7 +1696,6 @@ body {
   box-shadow: 0 8px 24px rgba(97, 29, 242, 0.15);
 }
 
-/* Thumbnail */
 .painel-post-thumb {
   height: 120px;
   background: linear-gradient(135deg, #ede8ff, #c8c5f7);
@@ -1729,7 +1711,6 @@ body {
   color: rgba(97, 29, 242, 0.25);
 }
 
-/* Conteúdo do card */
 .painel-post-tags {
   padding: 10px 14px 0;
   display: flex;
@@ -1777,7 +1758,6 @@ body {
   gap: 4px;
 }
 
-/* Ações do card */
 .painel-post-acoes {
   display: flex;
   border-top: 1px solid #f5f3ff;
@@ -1822,7 +1802,6 @@ body {
   background: #fff5f5;
 }
 
-/* Empty state */
 .painel-empty {
   text-align: center;
   padding: 80px 20px;
@@ -1839,7 +1818,6 @@ body {
   margin-bottom: 0;
 }
 
-/* Avatar preview na aba conta */
 .painel-avatar-preview-wrap {
   display: flex;
   justify-content: center;
@@ -1853,7 +1831,6 @@ body {
   box-shadow: 0 4px 16px rgba(97, 29, 242, 0.1);
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .painel-sidebar {
     width: 100%;
@@ -1881,7 +1858,6 @@ body {
   }
 }
 
-/* ========== NOTÍCIAS — HERO ========== */
 .noticias-hero {
   background: linear-gradient(135deg, #1a0a4a 0%, #611df2 60%, #35f2df 100%);
   padding: 48px 0 36px;
@@ -1915,7 +1891,6 @@ body {
   padding-bottom: 60px;
 }
 
-/* ========== CARD DA LISTA DE NOTÍCIAS ========== */
 .noticia-lista-card {
   display: flex;
   gap: 16px;
@@ -1995,7 +1970,6 @@ body {
   }
 }
 
-/* ── Categorias sidebar ── */
 .noticias-categorias-lista {
   display: flex;
   flex-wrap: wrap;
@@ -2020,13 +1994,11 @@ body {
   color: white;
 }
 
-/* ========== NOTÍCIA INDIVIDUAL ========== */
 .noticia-single-container {
   padding-top: 32px;
   padding-bottom: 80px;
 }
 
-/* Seção / categoria */
 .noticia-single-secao {
   display: flex;
   align-items: center;
@@ -2064,7 +2036,6 @@ body {
   }
 }
 
-/* Resumo / subtítulo */
 .noticia-single-resumo {
   font-size: 1.1rem;
   color: #555;
@@ -2073,13 +2044,11 @@ body {
   font-weight: 400;
 }
 
-/* Divisor */
 .noticia-single-divisor {
   border-color: #eee;
   margin: 16px 0;
 }
 
-/* Datas */
 .noticia-single-datas {
   display: flex;
   align-items: center;
@@ -2095,7 +2064,7 @@ body {
   gap: 4px;
 }
 
-/* Autor */
+
 .noticia-single-autor {
   display: flex;
   align-items: center;
@@ -2134,7 +2103,6 @@ body {
   color: #aaa;
 }
 
-/* Imagem destaque */
 .noticia-single-figura {
   margin: 24px 0;
 }
@@ -2145,7 +2113,6 @@ body {
   border-radius: 12px;
 }
 
-/* Corpo do texto */
 .noticia-single-body {
   margin-top: 8px;
 }
@@ -2156,7 +2123,6 @@ body {
   margin-bottom: 22px;
   font-family: Georgia, "Times New Roman", serif;
 }
-/* Primeiro parágrafo em destaque */
 .noticia-paragrafo-destaque {
   font-size: 1.15rem;
   font-weight: 500;
@@ -2167,7 +2133,6 @@ body {
   font-weight: 700;
 }
 
-/* Rodapé do artigo */
 .noticia-single-rodape {
   display: flex;
   align-items: center;
@@ -2208,7 +2173,6 @@ body {
   color: white;
 }
 
-/* ── Relacionadas ── */
 .noticia-relacionadas {
   margin-top: 48px;
   padding-top: 32px;
@@ -2290,7 +2254,6 @@ body {
   margin-top: auto;
 }
 
-/* ========== NOTICIAS-VIEW ========== */
 .noticias-hero {
   background: linear-gradient(135deg, #1a0a4a 0%, #611df2 60%, #4e7cd9 100%);
   padding: 48px 0 36px;
@@ -2320,7 +2283,6 @@ body {
   padding-bottom: 60px;
 }
 
-/* Card da lista */
 .noticias-card-link {
   text-decoration: none;
   display: block;
@@ -2393,7 +2355,6 @@ body {
   color: #ddd;
 }
 
-/* Rank sidebar */
 .noticias-rank {
   font-size: 1.3rem;
   font-weight: 800;
@@ -2402,7 +2363,6 @@ body {
   min-width: 24px;
 }
 
-/* Pills de categoria */
 .noticias-cat-pill {
   display: inline-block;
   padding: 5px 14px;
@@ -2421,7 +2381,6 @@ body {
   color: white;
 }
 
-/* ========== NOTICIA INDIVIDUAL ========== */
 .noticia-single-wrap {
   max-width: 1100px;
   padding-top: 32px;
@@ -2434,7 +2393,6 @@ body {
   padding: 0;
 }
 
-/* Breadcrumb categoria */
 .noticia-breadcrumb {
   display: flex;
   align-items: center;
@@ -2455,7 +2413,6 @@ body {
   color: #aaa;
 }
 
-/* Título grande — estilo jornalístico */
 .noticia-titulo-grande {
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 800;
@@ -2465,7 +2422,6 @@ body {
   font-family: Georgia, "Times New Roman", serif;
 }
 
-/* Resumo em destaque */
 .noticia-resumo-destaque {
   font-size: 1.05rem;
   color: #555;
@@ -2474,14 +2430,12 @@ body {
   font-style: italic;
 }
 
-/* Divisor */
 .noticia-divisor {
   border: none;
   border-top: 1px solid #e8e8e8;
   margin: 18px 0;
 }
 
-/* Meta data */
 .noticia-meta-data {
   display: flex;
   align-items: center;
@@ -2494,7 +2448,6 @@ body {
   color: #ddd;
 }
 
-/* Autor */
 .noticia-autor-bloco {
   display: flex;
   align-items: center;
@@ -2520,7 +2473,6 @@ body {
   text-decoration: underline;
 }
 
-/* Imagem destaque */
 .noticia-figura {
   margin: 0 0 28px;
 }
@@ -2531,7 +2483,6 @@ body {
   border-radius: 10px;
 }
 
-/* Conteúdo */
 .noticia-conteudo {
   font-size: 1.05rem;
   color: #222;
@@ -2541,7 +2492,6 @@ body {
   margin-bottom: 22px;
 }
 
-/* Lead — primeiro parágrafo em negrito */
 .noticia-lead {
   font-size: 1.08rem;
   font-weight: 500;
@@ -2552,7 +2502,6 @@ body {
   font-weight: 700;
 }
 
-/* Compartilhar */
 .noticia-compartilhar {
   display: flex;
   align-items: center;
@@ -2598,7 +2547,6 @@ body {
   color: #611df2;
 }
 
-/* Relacionadas */
 .noticia-relacionadas {
   margin-top: 48px;
 }

@@ -19,7 +19,6 @@ $base = '';
 <body>
 <?php include __DIR__ . '/header.php'; ?>
 
-<!-- HERO -->
 <div class="sobre-section" style="margin-top:72px;">
   <div class="container text-center py-2">
     <h1 class="section-title--light fw-bold mb-2" style="color:#fff;font-size:2.4rem;">
@@ -37,7 +36,6 @@ $base = '';
     <i class="bi bi-arrow-left"></i> Voltar ao início
   </a>
 
-  <!-- INTRO -->
   <div class="noticia-artigo mb-4">
     <div class="noticia-conteudo">
       <p class="noticia-lead">
@@ -51,7 +49,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 1 -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">1</span>
@@ -66,7 +63,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 2 -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">2</span>
@@ -82,7 +78,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 3 -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">3</span>
@@ -96,7 +91,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 4 -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">4</span>
@@ -116,7 +110,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 5 -->
   <div class="noticia-artigo mb-4">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">5</span>
@@ -129,7 +122,6 @@ $base = '';
     </div>
   </div>
 
-  <!-- SEÇÃO 6 -->
   <div class="noticia-artigo">
     <div class="d-flex align-items-center gap-3 mb-3">
       <span class="badge bg-primary text-white" style="font-size:1rem;padding:8px 14px;border-radius:50px;">6</span>

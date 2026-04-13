@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Bloqueia acesso se não for adm
+
 if (!isset($_SESSION["usuario_perfil"]) || $_SESSION["usuario_perfil"] !== "adm") {
     header("Location: ../auth/login.php?erro=Acesso restrito");
     exit;
@@ -10,11 +10,10 @@ if (!isset($_SESSION["usuario_perfil"]) || $_SESSION["usuario_perfil"] !== "adm"
 $string_de_conexao = "sqlite:../banco.db";
 $pdo = new \PDO($string_de_conexao);
 
-// Buscar perfis disponíveis
 $sql_perfis = "SELECT id, tipo FROM perfil ORDER BY tipo";
 $result_perfis = $pdo->query($sql_perfis);
 
-// Listar usuários
+
 $sql = "
     SELECT usuarios.id, usuarios.nome, usuarios.email, perfil.tipo as perfil_tipo
     FROM usuarios
@@ -34,7 +33,7 @@ $result_set_usuarios = $pdo->query($sql);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <script>
-// Auto-hide das mensagens de sucesso/erro
+
 document.addEventListener('DOMContentLoaded', function() {
   const alerts = document.querySelectorAll('.alert');
   alerts.forEach(function(alert) {
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <body class="adm-body">
   <div class="adm-layout">
 
-    <!-- SIDEBAR -->
+
     <aside class="adm-sidebar">
       <div class="adm-sidebar-logo">
         <img src="../img/BlogLogo-01-01.svg" alt="PlayZone">
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+
     <main class="adm-main">
       <div class="adm-topbar">
         <h4 class="adm-page-titulo">Usuários</h4>
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="alert alert-danger"><?= htmlspecialchars($_GET['erro']) ?></div>
       <?php endif; ?>
 
-      <!-- SEÇÃO ADICIONAR USUÁRIO -->
+
       <div class="adm-add-user-section">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h5 class="adm-section-titulo mb-0">Adicionar Novo Usuário</h5>
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
 
-      <!-- TABELA DE USUÁRIOS -->
+
       <div class="adm-card">
         <table class="table adm-table">
           <thead>
@@ -146,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </main>
   </div>
 
-  <!-- MODAL ADICIONAR USUÁRIO -->
+
   <div class="adm-modal-overlay" id="addUserModal">
     <div class="adm-modal">
       <div class="d-flex justify-content-between align-items-center mb-4">

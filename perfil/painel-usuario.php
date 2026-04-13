@@ -1,7 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Só usuários logados
 if (!isset($_SESSION['usuario_id'])) {
     header('Location: ../auth/login.php?erro=Faça login para acessar seu painel');
     exit;
@@ -12,7 +11,6 @@ require_once __DIR__ . '/../posts-index/posts-model.php';
 $pdo        = conectar();
 $usuario_id = (int)$_SESSION['usuario_id'];
 
-// Busca dados atualizados do usuário no banco
 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
 $stmt->execute([':id' => $usuario_id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -22,10 +20,8 @@ if (!$usuario) {
     exit;
 }
 
-// Aba ativa (posts | conta)
 $aba = $_GET['aba'] ?? 'posts';
 
-// Busca posts do usuário
 $stmtPosts = $pdo->prepare("
     SELECT
         p.id, p.titulo, p.conteudo, p.imagem, p.data_publicacao,
@@ -46,14 +42,11 @@ $stmtPosts = $pdo->prepare("
 $stmtPosts->execute([':uid' => $usuario_id]);
 $posts = $stmtPosts->fetchAll(PDO::FETCH_ASSOC);
 
-// Busca todas as tags para o modal de edição
 $todasTags = buscar_tags();
 
-// Verifica se o usuário pode gerenciar notícias (adm=1 ou jornalista=3)
 $perfil_id_sessao = (int)($_SESSION['usuario_perfil_id'] ?? $usuario['perfil_id'] ?? 2);
 $pode_noticias = in_array($perfil_id_sessao, [1, 3]);
 
-// Busca notícias do usuário (apenas se tiver permissão)
 $noticias = [];
 if ($pode_noticias) {
     require_once __DIR__ . '/../noticias-index/noticias-model.php';
@@ -83,10 +76,10 @@ if ($pode_noticias) {
 <body class="painel-body">
 <div class="painel-layout">
 
-  <!-- ========== SIDEBAR ========== -->
+
   <aside class="painel-sidebar">
 
-    <!-- Avatar + nome -->
+
     <div class="painel-sidebar-perfil">
       <div class="painel-sidebar-avatar-wrap">
         <img src="<?= htmlspecialchars($usuario['avatar'] ?? '../img/avatar-default.png') ?>"
@@ -110,7 +103,7 @@ if ($pode_noticias) {
       <?php endif; ?>
     </div>
 
-    <!-- Stats rápidas -->
+
     <div class="painel-sidebar-stats">
       <div class="painel-stat">
         <span class="painel-stat-num"><?= count($posts) ?></span>
@@ -132,7 +125,7 @@ if ($pode_noticias) {
       <?php endif; ?>
     </div>
 
-    <!-- Navegação -->
+
     <nav class="painel-nav">
       <p class="adm-nav-label">Menu</p>
       <a href="?aba=posts" class="adm-nav-item <?= $aba === 'posts' ? 'active' : '' ?>">
@@ -159,10 +152,9 @@ if ($pode_noticias) {
 
   </aside>
 
-  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+
   <main class="painel-main">
 
-    <!-- Topbar -->
     <div class="adm-topbar">
       <h4 class="adm-page-titulo">
         <?php
@@ -175,7 +167,6 @@ if ($pode_noticias) {
       </h4>
     </div>
 
-    <!-- Mensagens -->
     <?php if (isset($_GET['sucesso'])): ?>
       <div class="alert alert-success"><?= htmlspecialchars($_GET['sucesso']) ?></div>
     <?php endif; ?>
@@ -183,7 +174,7 @@ if ($pode_noticias) {
       <div class="alert alert-danger"><?= htmlspecialchars($_GET['erro']) ?></div>
     <?php endif; ?>
 
-    <!-- ===== ABA: MEUS POSTS ===== -->
+
     <?php if ($aba === 'posts'): ?>
 
       <?php if (empty($posts)): ?>
@@ -200,6 +191,9 @@ if ($pode_noticias) {
           <p class="resultado-info mb-0">
             <strong><?= count($posts) ?></strong> post<?= count($posts) != 1 ? 's' : '' ?> publicado<?= count($posts) != 1 ? 's' : '' ?>
           </p>
+          <a href="../posts-index/posts-view.php" class="btn-criar-post" style="font-size:.85rem;padding:8px 18px;">
+            <i class="bi bi-plus-circle-fill"></i> Novo Post
+          </a>
         </div>
 
         <div class="painel-posts-grid">
@@ -209,7 +203,7 @@ if ($pode_noticias) {
           ?>
           <div class="painel-post-card">
 
-            <!-- Imagem ou placeholder -->
+
             <div class="painel-post-thumb"
                  style="<?= $post['imagem'] ? 'background-image:url('.htmlspecialchars($post['imagem']).')' : '' ?>">
               <?php if (!$post['imagem']): ?>
@@ -217,7 +211,7 @@ if ($pode_noticias) {
               <?php endif; ?>
             </div>
 
-            <!-- Tags -->
+
             <?php if (!empty($tags_post)): ?>
             <div class="painel-post-tags">
               <?php foreach (array_slice($tags_post, 0, 2) as $tag): ?>
@@ -231,20 +225,19 @@ if ($pode_noticias) {
             </div>
             <?php endif; ?>
 
-            <!-- Título -->
+
             <h6 class="painel-post-titulo"><?= htmlspecialchars($post['titulo']) ?></h6>
 
-            <!-- Trecho -->
+
             <p class="painel-post-trecho"><?= htmlspecialchars($trecho) ?>...</p>
 
-            <!-- Stats -->
+
             <div class="painel-post-stats">
               <span><i class="bi bi-heart-fill" style="color:#e74c3c;"></i> <?= $post['curtidas'] ?></span>
               <span><i class="bi bi-chat-fill" style="color:#611DF2;"></i> <?= $post['comentarios'] ?></span>
               <span><i class="bi bi-eye-fill" style="color:#611DF2;"></i> <?= $post['visualizacoes'] ?></span>
             </div>
 
-            <!-- Tempo -->
             <div class="painel-post-data">
               <i class="bi bi-clock"></i>
               <span class="tempo-relativo" data-publicacao="<?= $post['data_publicacao'] ?>">
@@ -252,7 +245,7 @@ if ($pode_noticias) {
               </span>
             </div>
 
-            <!-- Ações -->
+
             <div class="painel-post-acoes">
               <a href="../posts-index/post.php?id=<?= $post['id'] ?>"
                  class="painel-btn-ver" title="Ver post">
@@ -274,7 +267,7 @@ if ($pode_noticias) {
 
       <?php endif; ?>
 
-    <!-- ===== ABA: MINHAS NOTÍCIAS ===== -->
+
     <?php elseif ($aba === 'noticias' && $pode_noticias): ?>
 
       <?php if (empty($noticias)): ?>
@@ -294,7 +287,7 @@ if ($pode_noticias) {
           <?php foreach ($noticias as $noticia): ?>
           <div class="painel-post-card">
 
-            <!-- Thumb -->
+
             <div class="painel-post-thumb"
                  style="<?= $noticia['imagem'] ? 'background-image:url('.htmlspecialchars(normalizar_imagem_noticia($noticia['imagem'])).')' : '' ?>">
               <?php if (!$noticia['imagem']): ?>
@@ -302,25 +295,25 @@ if ($pode_noticias) {
               <?php endif; ?>
             </div>
 
-            <!-- Categoria -->
+
             <div class="painel-post-tags">
               <span class="badge <?= categoria_para_badge($noticia['categoria']) ?>" style="font-size:.7rem;">
                 <?= strtoupper($noticia['categoria']) ?>
               </span>
             </div>
 
-            <!-- Título -->
+
             <h6 class="painel-post-titulo"><?= htmlspecialchars($noticia['titulo']) ?></h6>
 
-            <!-- Resumo -->
+
             <p class="painel-post-trecho"><?= htmlspecialchars(mb_substr($noticia['resumo'], 0, 100)) ?>...</p>
 
-            <!-- Stats -->
+
             <div class="painel-post-stats">
               <span><i class="bi bi-eye-fill" style="color:#611DF2;"></i> <?= $noticia['visualizacoes'] ?></span>
             </div>
 
-            <!-- Tempo -->
+
             <div class="painel-post-data">
               <i class="bi bi-clock"></i>
               <span class="tempo-relativo" data-publicacao="<?= $noticia['data_publicacao'] ?>">
@@ -328,7 +321,7 @@ if ($pode_noticias) {
               </span>
             </div>
 
-            <!-- Ações -->
+
             <div class="painel-post-acoes">
               <a href="../noticias-index/noticia.php?id=<?= $noticia['id'] ?>"
                  class="painel-btn-ver" title="Ver notícia">
@@ -350,13 +343,13 @@ if ($pode_noticias) {
 
       <?php endif; ?>
 
-    <!-- ===== ABA: EDITAR CONTA ===== -->
+
     <?php elseif ($aba === 'conta'): ?>
 
       <div class="adm-card" style="max-width:600px;">
         <form action="ctrl-editar-conta.php" method="POST" enctype="multipart/form-data">
 
-          <!-- Avatar preview -->
+
           <div class="painel-avatar-preview-wrap mb-4">
             <img src="<?= htmlspecialchars($usuario['avatar'] ?? '../img/avatar-default.png') ?>"
                  alt="Avatar" id="avatarPreview" class="painel-avatar-preview"
@@ -397,30 +390,20 @@ if ($pode_noticias) {
 
           <hr class="my-4">
 
-          <p class="fw-semibold mb-3" style="color:#611DF2;">
-            <i class="bi bi-shield-lock me-1"></i> Alterar senha
-            <span class="text-muted fw-normal" style="font-size:.85rem;"> (deixe em branco para manter a atual)</span>
-          </p>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Nova senha</label>
-            <input type="password" name="senha_nova" class="form-control adm-form-input"
-                   placeholder="Mínimo 6 caracteres" minlength="6">
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Confirmar nova senha</label>
-            <input type="password" name="senha_confirma" class="form-control adm-form-input"
-                   placeholder="Repita a senha">
-          </div>
-
-          <div class="d-flex gap-3 justify-content-end">
-            <a href="?aba=posts" class="btn-modal-cancelar" style="text-decoration:none;display:inline-flex;align-items:center;">
-              Cancelar
-            </a>
-            <button type="submit" class="btn-modal-publicar">
-              <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <button type="button" class="btn-modal-cancelar"
+                    onclick="abrirModalSenha()"
+                    style="display:inline-flex;align-items:center;gap:6px;">
+              <i class="bi bi-shield-lock"></i> Trocar senha
             </button>
+            <div class="d-flex gap-3">
+              <a href="?aba=posts" class="btn-modal-cancelar" style="text-decoration:none;display:inline-flex;align-items:center;">
+                Cancelar
+              </a>
+              <button type="submit" class="btn-modal-publicar">
+                <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+              </button>
+            </div>
           </div>
 
         </form>
@@ -431,7 +414,6 @@ if ($pode_noticias) {
   </main>
 </div>
 
-<!-- ========== MODAL CONFIRMAR DELETAR ========== -->
 <div class="adm-modal-overlay" id="modalDeletar">
   <div class="adm-modal" style="max-width:420px;">
     <h5 class="fw-bold mb-2" style="color:#1a0a4a;">Deletar post?</h5>
@@ -446,7 +428,6 @@ if ($pode_noticias) {
   </div>
 </div>
 
-<!-- ========== MODAL EDITAR POST ========== -->
 <div class="adm-modal-overlay" id="modalEditar">
   <div class="adm-modal" style="max-width:620px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -506,7 +487,6 @@ if ($pode_noticias) {
 </div>
 
 <script>
-// ===== AUTO-HIDE ALERTAS =====
 document.querySelectorAll('.alert').forEach(el => {
   setTimeout(() => {
     el.style.transition = 'opacity .5s';
@@ -515,7 +495,7 @@ document.querySelectorAll('.alert').forEach(el => {
   }, 3500);
 });
 
-// ===== MODAL DELETAR =====
+
 function confirmarDeletar(id, titulo) {
   document.getElementById('modalDeletarNome').textContent = 'Tem certeza que deseja deletar "' + titulo + '"? Esta ação não pode ser desfeita.';
   document.getElementById('btnConfirmarDeletar').href = 'ctrl-deletar-post.php?id=' + id;
@@ -528,14 +508,14 @@ document.getElementById('modalDeletar').addEventListener('click', function(e) {
   if (e.target === this) fecharDeletar();
 });
 
-// ===== MODAL EDITAR POST =====
+
 function abrirEditarPost(id, titulo, conteudo, imagem, tagsStr) {
   document.getElementById('editPostId').value   = id;
   document.getElementById('editTitulo').value   = titulo;
   document.getElementById('editConteudo').value = conteudo;
   document.getElementById('editImagem').value   = imagem || '';
 
-  // Desmarca todas as tags e marca as do post
+
   const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()) : [];
   document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
     cb.checked = tags.includes(cb.getAttribute('data-nome'));
@@ -553,7 +533,7 @@ document.getElementById('modalEditar').addEventListener('click', function(e) {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharEditar(); fecharDeletar(); } });
 
-// Limita tags a 5 no modal de edição
+
 document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
   cb.addEventListener('change', function() {
     const sel = document.querySelectorAll('#editTagsGrid input:checked');
@@ -562,7 +542,7 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
 });
 </script>
 
-<!-- ========== MODAL DELETAR NOTÍCIA ========== -->
+
 <?php if ($pode_noticias): ?>
 <div class="adm-modal-overlay" id="modalDeletarNoticia">
   <div class="adm-modal" style="max-width:420px;">
@@ -578,7 +558,7 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
   </div>
 </div>
 
-<!-- ========== MODAL EDITAR NOTÍCIA ========== -->
+
 <div class="adm-modal-overlay" id="modalEditarNoticia">
   <div class="adm-modal" style="max-width:660px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -645,7 +625,7 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
 <?php endif; ?>
 
 <script>
-// ===== MODAL DELETAR NOTÍCIA =====
+
 function confirmarDeletarNoticia(id, titulo) {
   document.getElementById('modalDeletarNoticiaNome').textContent =
     'Tem certeza que deseja deletar "' + titulo + '"? Esta ação não pode ser desfeita.';
@@ -659,7 +639,6 @@ document.getElementById('modalDeletarNoticia')?.addEventListener('click', functi
   if (e.target === this) fecharDeletarNoticia();
 });
 
-// ===== MODAL EDITAR NOTÍCIA =====
 function abrirEditarNoticia(id, titulo, resumo, conteudo, imagem, categoria) {
   document.getElementById('editNoticiaId').value        = id;
   document.getElementById('editNoticiaTitulo').value    = titulo;
@@ -679,13 +658,108 @@ document.getElementById('modalEditarNoticia')?.addEventListener('click', functio
   if (e.target === this) fecharEditarNoticia();
 });
 
-// Fecha todos com ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     fecharEditarNoticia();
     fecharDeletarNoticia();
+    fecharModalSenha();
   }
 });
+</script>
+
+<div class="adm-modal-overlay" id="modalSenha">
+  <div class="adm-modal" style="max-width:440px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0" style="color:#611DF2;">
+        <i class="bi bi-shield-lock me-2"></i>Trocar Senha
+      </h5>
+      <button class="btn-close" onclick="fecharModalSenha()"></button>
+    </div>
+
+    <form action="ctrl-trocar-senha.php" method="POST" id="formSenha">
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Senha atual <span style="color:#ef4444;">*</span></label>
+        <div class="position-relative">
+          <input type="password" name="senha_atual" id="senhaAtual"
+                 class="form-control adm-form-input" required
+                 placeholder="Digite sua senha atual">
+          <button type="button" class="btn-toggle-senha" onclick="toggleSenha('senhaAtual', this)" tabindex="-1">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nova senha <span style="color:#ef4444;">*</span></label>
+        <div class="position-relative">
+          <input type="password" name="senha_nova" id="senhaNova"
+                 class="form-control adm-form-input" required minlength="6"
+                 placeholder="Mínimo 6 caracteres">
+          <button type="button" class="btn-toggle-senha" onclick="toggleSenha('senhaNova', this)" tabindex="-1">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Confirmar nova senha <span style="color:#ef4444;">*</span></label>
+        <div class="position-relative">
+          <input type="password" name="senha_confirma" id="senhaConfirma"
+                 class="form-control adm-form-input" required
+                 placeholder="Repita a nova senha">
+          <button type="button" class="btn-toggle-senha" onclick="toggleSenha('senhaConfirma', this)" tabindex="-1">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex gap-3 justify-content-end">
+        <button type="button" class="btn-modal-cancelar" onclick="fecharModalSenha()">Cancelar</button>
+        <button type="submit" class="btn-modal-publicar">
+          <i class="bi bi-check-lg me-1"></i> Salvar nova senha
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+.btn-toggle-senha {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: #aaa; cursor: pointer; padding: 4px;
+  line-height: 1;
+}
+.btn-toggle-senha:hover { color: #611DF2; }
+</style>
+
+<script>
+function abrirModalSenha() {
+  document.getElementById('formSenha').reset();
+  document.getElementById('modalSenha').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('senhaAtual').focus(), 100);
+}
+function fecharModalSenha() {
+  document.getElementById('modalSenha').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('modalSenha').addEventListener('click', function(e) {
+  if (e.target === this) fecharModalSenha();
+});
+
+function toggleSenha(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const icon  = btn.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.className = 'bi bi-eye-slash';
+  } else {
+    input.type = 'password';
+    icon.className = 'bi bi-eye';
+  }
+}
 </script>
 
 <script src="../tempo-relativo.js"></script>

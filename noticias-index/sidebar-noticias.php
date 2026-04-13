@@ -3,7 +3,6 @@ require "noticias-model.php";
 
 $result_set_noticias = buscar_noticias_recentes(5);
 
-// Detecta se a sidebar está sendo incluída de fora da pasta noticias-index
 $_sidebar_prefix = (strpos($_SERVER['PHP_SELF'], 'noticias-index') !== false) ? '' : 'noticias-index/';
 ?>
 

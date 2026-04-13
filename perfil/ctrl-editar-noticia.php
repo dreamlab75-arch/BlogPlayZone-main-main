@@ -22,7 +22,6 @@ if (!$noticia_id) {
     exit;
 }
 
-// Verifica se a notícia pertence ao usuário (ou se é adm)
 $stmt = $pdo->prepare("SELECT usuario_id FROM noticias WHERE id = :id");
 $stmt->execute([':id' => $noticia_id]);
 $noticia = $stmt->fetch(PDO::FETCH_ASSOC);

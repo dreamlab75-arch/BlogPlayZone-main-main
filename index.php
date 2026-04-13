@@ -18,14 +18,12 @@
   <template hx-get="header.php" hx-target="#header" hx-trigger="load"></template>
   <div id="header"></div>
 
-  <!-- Carrossel — agora PHP -->
   <template hx-get="carrosel-noticias.php" hx-target="#carrosel-noticias" hx-trigger="load"></template>
   <div id="carrosel-noticias"></div>
 
   <div class="container posts-container">
     <div class="row g-4">
 
-      <!-- POSTS — PHP -->
       <div class="col-lg-8">
       <?php
 require "posts-index/posts-model.php";
@@ -49,7 +47,6 @@ $result_set_posts = buscar_posts_em_alta(3);
 </div>
       </div>
 
-      <!-- SIDEBAR NOTÍCIAS — PHP -->
       <div class="col-lg-4">
         <div class="news-sidebar" id="noticias">
           <h4><i class="bi bi-newspaper me-2"></i>Últimas Notícias</h4>

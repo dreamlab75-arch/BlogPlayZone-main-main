@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Bloqueia acesso se não for adm
 if (!isset($_SESSION["usuario_perfil"]) || $_SESSION["usuario_perfil"] !== "adm") {
     header("Location: ../auth/login.php?erro=Acesso restrito");
     exit;

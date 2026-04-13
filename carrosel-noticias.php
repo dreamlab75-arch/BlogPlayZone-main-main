@@ -2,7 +2,6 @@
 
 require "noticias-index/noticias-model.php";
 
-// Tenta pegar destaques da semana; se vazio, usa as 3 mais recentes
 $destaques = buscar_destaques_semana(3);
 $slides = $destaques->fetchAll(PDO::FETCH_ASSOC);
 
@@ -15,7 +14,6 @@ if (empty($slides)) {
   <div class="container">
     <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
 
-      <!-- INDICADORES -->
       <div class="carousel-indicators">
         <?php foreach ($slides as $i => $slide): ?>
           <button type="button"
@@ -26,7 +24,6 @@ if (empty($slides)) {
         <?php endforeach; ?>
       </div>
 
-      <!-- SLIDES — o slide inteiro é clicável -->
       <div class="carousel-inner">
         <?php foreach ($slides as $i => $slide): ?>
           <a href="noticias-index/noticia.php?id=<?= $slide['id'] ?>"
@@ -46,7 +43,6 @@ if (empty($slides)) {
         <?php endforeach; ?>
       </div>
 
-      <!-- BOTÕES (stopPropagation para não acionar o link do slide ao clicar nas setas) -->
       <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev"
               onclick="event.preventDefault();event.stopPropagation();">
         <div class="carousel-btn"><i class="bi bi-chevron-left"></i></div>

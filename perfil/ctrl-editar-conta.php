@@ -16,18 +16,12 @@ require_once __DIR__ . '/../posts-index/posts-model.php';
 $pdo        = conectar();
 $usuario_id = (int)$_SESSION['usuario_id'];
 
-$nome           = trim($_POST['nome']          ?? '');
-$email          = trim($_POST['email']         ?? '');
-$avatar         = trim($_POST['avatar']        ?? '');
-$bio            = trim($_POST['bio']           ?? '');
-$senha_nova     = $_POST['senha_nova']         ?? '';
-$senha_confirma = $_POST['senha_confirma']     ?? '';
+$nome   = trim($_POST['nome']   ?? '');
+$email  = trim($_POST['email']  ?? '');
+$avatar = trim($_POST['avatar'] ?? '');
+$bio    = trim($_POST['bio']    ?? '');
 
-// Validações básicas
-if (strlen($nome) < 2) {
-    header('Location: painel-usuario.php?aba=conta&erro=' . urlencode('Nome muito curto.'));
-    exit;
-}
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     header('Location: painel-usuario.php?aba=conta&erro=' . urlencode('E-mail inválido.'));
     exit;
@@ -51,24 +45,9 @@ $params  = [
     ':id'         => $usuario_id,
 ];
 
-// Atualiza senha apenas se foi preenchida
-if ($senha_nova !== '') {
-    if (strlen($senha_nova) < 6) {
-        header('Location: painel-usuario.php?aba=conta&erro=' . urlencode('A senha deve ter no mínimo 6 caracteres.'));
-        exit;
-    }
-    if ($senha_nova !== $senha_confirma) {
-        header('Location: painel-usuario.php?aba=conta&erro=' . urlencode('As senhas não coincidem.'));
-        exit;
-    }
-    $campos              .= ", senha = :senha";
-    $params[':senha']     = hash('sha256', $senha_nova);
-}
-
 try {
     $pdo->prepare("UPDATE usuarios SET $campos WHERE id = :id")->execute($params);
 
-    // Atualiza sessão com os novos dados
     $_SESSION['usuario_nome']   = $nome;
     $_SESSION['usuario_avatar'] = $avatar ?: $_SESSION['usuario_avatar'];
 

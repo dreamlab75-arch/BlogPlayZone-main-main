@@ -49,7 +49,6 @@ $stmt->bindValue(':senha', $senha_hash);
 $stmt->bindValue(':perfil_id', $perfil_id);
 
 if ($stmt->execute()) {
-    // VOLTE PRA ESTE header() por enquanto:
     header("Location: painel-adm.php?sucesso=Usuário criado com sucesso!");
 } else {
     header("Location: painel-adm.php?erro=Erro ao criar usuário");

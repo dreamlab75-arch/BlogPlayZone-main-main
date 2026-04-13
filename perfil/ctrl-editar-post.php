@@ -25,7 +25,6 @@ if (!$post_id || strlen($titulo) < 5 || strlen($conteudo) < 50) {
     exit;
 }
 
-// Verifica propriedade do post
 $stmt = $pdo->prepare("SELECT usuario_id FROM posts WHERE id = :id");
 $stmt->execute([':id' => $post_id]);
 $post = $stmt->fetch(PDO::FETCH_ASSOC);
