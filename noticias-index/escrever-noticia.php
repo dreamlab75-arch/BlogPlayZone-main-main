@@ -64,7 +64,7 @@ $categorias = [
   <?php endif; ?>
 
   <div class="adm-card">
-    <form action="ctrl-escrever-noticia.php" method="POST" id="formNoticia">
+    <form action="ctrl-escrever-noticia.php" method="POST" id="formNoticia" enctype="multipart/form-data">
 
       <div class="mb-3">
         <label class="form-label fw-semibold">Título <span style="color:#ef4444;">*</span></label>
@@ -78,7 +78,7 @@ $categorias = [
 
       <div class="mb-3">
         <label class="form-label fw-semibold">Resumo <span style="color:#ef4444;">*</span>
-          <span class="text-muted fw-normal" style="font-size:.82rem;"></span>
+          <span class="text-muted fw-normal" style="font-size:.82rem;">(aparece nos cards e listagens)</span>
         </label>
         <textarea name="resumo" id="inputResumo"
                   class="form-control adm-form-input"
@@ -103,28 +103,26 @@ $categorias = [
         </div>
         <div class="col-md-7">
           <label class="form-label fw-semibold">
-            Imagem <span class="text-muted fw-normal">(URL, opcional)</span>
+            Imagem <span class="text-muted fw-normal">(opcional)</span>
           </label>
-          <input type="url" name="imagem" id="inputImagem"
+          <input type="file" name="imagem" id="inputImagem"
                  class="form-control adm-form-input"
-                 placeholder="https://..."
-                 value="<?= htmlspecialchars($_POST['imagem'] ?? '') ?>"
-                 oninput="atualizarPreviewImagem(this.value)">
+                 accept="image/jpeg,image/png,image/webp,image/gif"
+                 onchange="previewImagemLocal(this)">
         </div>
       </div>
 
       <div id="previewImagemWrap" class="mb-3" style="display:none;">
         <div style="background:#0e0e1a;border-radius:12px;overflow:hidden;max-height:260px;">
           <img id="previewImagem" src="" alt="Preview"
-               style="width:100%;max-height:260px;object-fit:cover;display:block;"
-               onerror="document.getElementById('previewImagemWrap').style.display='none'">
+               style="width:100%;max-height:260px;object-fit:cover;display:block;">
         </div>
         <div class="form-text"><i class="bi bi-check-circle text-success me-1"></i>Preview da imagem</div>
       </div>
 
       <div class="mb-3" id="badgePreviewWrap" style="display:none;">
         <span class="badge" id="badgePreview" style="font-size:.8rem;"></span>
-        <span class="form-text ms-2">Preview da categoria</span>
+        <span class="form-text ms-2">Assim vai aparecer nos cards</span>
       </div>
 
       <div class="mb-4">
@@ -171,18 +169,21 @@ contador('inputTitulo',   'contagemTitulo',   200);
 contador('inputResumo',   'contagemResumo',   300);
 contador('inputConteudo', 'contagemConteudo',  0);
 
-function atualizarPreviewImagem(url) {
+function previewImagemLocal(input) {
   const wrap = document.getElementById('previewImagemWrap');
   const img  = document.getElementById('previewImagem');
-  if (url && url.startsWith('http')) {
-    img.src = url;
-    wrap.style.display = 'block';
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      img.src = e.target.result;
+      wrap.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
   } else {
     wrap.style.display = 'none';
   }
 }
-const imgVal = document.getElementById('inputImagem').value;
-if (imgVal) atualizarPreviewImagem(imgVal);
+
 
 const badgeMap = {
   'lançamento':'bg-primary text-white','rumor':'bg-warning text-dark',

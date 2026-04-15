@@ -11,21 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../posts-index/posts-model.php';
+require_once __DIR__ . '/../util/upload.php';
 
 $pdo        = conectar();
 $usuario_id = (int)$_SESSION['usuario_id'];
 $post_id    = (int)($_POST['post_id'] ?? 0);
 $titulo     = trim($_POST['titulo']   ?? '');
 $conteudo   = trim($_POST['conteudo'] ?? '');
-$imagem     = trim($_POST['imagem']   ?? '');
 $tags_ids   = array_slice(array_map('intval', $_POST['tags_post'] ?? []), 0, 5);
 
 if (!$post_id || strlen($titulo) < 5 || strlen($conteudo) < 50) {
-    header('Location: painel-usuario.php?erro=' . urlencode('Dados inválidos. Verifique título e conteúdo.'));
+    header('Location: painel-usuario.php?erro=' . urlencode('Dados inválidos.'));
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT usuario_id FROM posts WHERE id = :id");
+// Verifica propriedade
+$stmt = $pdo->prepare("SELECT usuario_id, imagem FROM posts WHERE id = :id");
 $stmt->execute([':id' => $post_id]);
 $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -37,18 +38,22 @@ if (!$post || ((int)$post['usuario_id'] !== $usuario_id && !$eh_adm)) {
 
 $pdo->beginTransaction();
 try {
-    // Atualiza o post
+    // Upload nova imagem (se enviada)
+    $pasta  = __DIR__ . '/../posts-index/posts_img';
+    $imagem = salvar_imagem('imagem', 'post', $post_id, $pasta, $post['imagem'] ?? '');
+
+    // Se não enviou nova imagem, mantém a atual
+    $imagem_final = $imagem ?? $post['imagem'];
+
     $pdo->prepare("
-        UPDATE posts SET titulo=:titulo, conteudo=:conteudo, imagem=:imagem
-        WHERE id=:id
+        UPDATE posts SET titulo=:titulo, conteudo=:conteudo, imagem=:imagem WHERE id=:id
     ")->execute([
         ':titulo'   => $titulo,
         ':conteudo' => $conteudo,
-        ':imagem'   => $imagem ?: null,
+        ':imagem'   => $imagem_final,
         ':id'       => $post_id,
     ]);
 
-    // Recria as tags
     $pdo->prepare("DELETE FROM post_tag WHERE post_id = :id")->execute([':id' => $post_id]);
     if (!empty($tags_ids)) {
         $stmtTag = $pdo->prepare("INSERT OR IGNORE INTO post_tag (post_id, tag_id) VALUES (:post_id, :tag_id)");
@@ -58,7 +63,10 @@ try {
     }
 
     $pdo->commit();
-    header('Location: painel-usuario.php?sucesso=' . urlencode('Post atualizado com sucesso!'));
+    header('Location: painel-usuario.php?sucesso=' . urlencode('Post atualizado com sucesso!'), true, 303);
+} catch (RuntimeException $e) {
+    $pdo->rollBack();
+    header('Location: painel-usuario.php?erro=' . urlencode($e->getMessage()));
 } catch (Exception $e) {
     $pdo->rollBack();
     header('Location: painel-usuario.php?erro=' . urlencode('Erro ao salvar o post.'));
