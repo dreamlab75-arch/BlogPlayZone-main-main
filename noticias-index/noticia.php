@@ -180,10 +180,10 @@ include __DIR__ . '/../header.php';
 
         <!-- AUTOR -->
         <div class="noticia-autor-bloco">
-          <img src="<?= htmlspecialchars(img_url($noticia['autor_avatar'] ?? '', '../img/avatar-default.png')) ?>"
+          <img src="<?= htmlspecialchars(img_url($noticia['autor_avatar'] ?? '', '/img/avatar-default.png')) ?>"
                alt="<?= htmlspecialchars($noticia['autor_nome']) ?>"
                class="noticia-autor-avatar"
-               <?= img_onerror('../img/avatar-default.png') ?>>
+               <?= img_onerror('/img/avatar-default.png') ?>>
           <div>
             <div class="noticia-autor-nome"><?= htmlspecialchars($noticia['autor_nome']) ?></div>
             <a href="mailto:" class="noticia-autor-email">Enviar E-mail</a>
@@ -282,9 +282,9 @@ include __DIR__ . '/../header.php';
         <?php if ($usuario_logado): ?>
           <form method="POST" class="form-comentario">
             <input type="hidden" name="acao" value="comentar">
-            <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'] ?? '', '../img/avatar-default.png')) ?>"
+            <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'] ?? '', '/img/avatar-default.png')) ?>"
                  alt="Você" class="avatar-mini"
-                 <?= img_onerror('../img/avatar-default.png') ?>>
+                 <?= img_onerror('/img/avatar-default.png') ?>>
             <textarea name="comentario"
                       placeholder="Escreva um comentário..."
                       required minlength="2"
@@ -307,10 +307,10 @@ include __DIR__ . '/../header.php';
         <?php else: ?>
           <?php foreach ($comentarios as $c): ?>
             <div class="comentario-item">
-              <img src="<?= htmlspecialchars(img_url($c['avatar'] ?? '', '../img/avatar-default.png')) ?>"
+              <img src="<?= htmlspecialchars(img_url($c['avatar'] ?? '', '/img/avatar-default.png')) ?>"
                    alt="<?= htmlspecialchars($c['nome']) ?>"
                    class="avatar-mini"
-                   <?= img_onerror('../img/avatar-default.png') ?>>
+                   <?= img_onerror('/img/avatar-default.png') ?>>
               <div class="comentario-corpo">
                 <span class="comentario-autor"><?= htmlspecialchars($c['nome']) ?></span>
                 <span class="comentario-tempo tempo-relativo" data-publicacao="<?= $c['data'] ?>">

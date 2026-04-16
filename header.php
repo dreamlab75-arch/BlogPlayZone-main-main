@@ -51,9 +51,9 @@ if (!isset($base)) $base = '';
         <div class="account-dropdown">
           <button class="btn btn-account" id="accountToggle" onclick="toggleAccountMenu()">
             <?php if (isset($_SESSION["usuario_avatar"]) && $_SESSION["usuario_avatar"]): ?>
-              <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'], $base . 'img/avatar-default.png')) ?>"
+              <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'], '/img/avatar-default.png')) ?>"
                    class="account-avatar" alt="Avatar"
-                   <?= img_onerror($base . 'img/avatar-default.png') ?>>
+                   <?= img_onerror('/img/avatar-default.png') ?>>
             <?php else: ?>
               <i class="bi bi-person-circle"></i>
             <?php endif; ?>
