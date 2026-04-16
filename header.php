@@ -1,24 +1,30 @@
 <?php
-
+// Inicia sessão apenas se ainda não estiver ativa
 if (session_status() === PHP_SESSION_NONE) session_start();
+if (!function_exists('img_url')) require_once __DIR__ . '/util/upload.php';
 
-
+// $base é definido pela página que inclui este header.
+// Na raiz: $base = '' (ou não definido)
+// Em subpastas: $base = '../'
 if (!isset($base)) $base = '';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-playzone fixed-top">
   <div class="container">
 
+    <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="<?= $base ?>index.php">
       <img src="<?= $base ?>img/BlogLogo-01-01.svg" alt="PlayZone">
     </a>
 
+    <!-- BOTÃO MOBILE -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.5);">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
 
+      <!-- LINKS centralizados -->
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
           <a class="nav-link nav-link-playzone" href="<?= $base ?>index.php">Início</a>
@@ -34,6 +40,7 @@ if (!isset($base)) $base = '';
         </li>
       </ul>
 
+      <!-- DIREITA: busca + conta -->
       <div class="d-flex align-items-center gap-3">
 
         <div class="search-wrapper">
@@ -44,7 +51,9 @@ if (!isset($base)) $base = '';
         <div class="account-dropdown">
           <button class="btn btn-account" id="accountToggle" onclick="toggleAccountMenu()">
             <?php if (isset($_SESSION["usuario_avatar"]) && $_SESSION["usuario_avatar"]): ?>
-              <img src="<?= $_SESSION['usuario_avatar'] ?>" class="account-avatar" alt="Avatar">
+              <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'], $base . 'img/avatar-default.png')) ?>"
+                   class="account-avatar" alt="Avatar"
+                   <?= img_onerror($base . 'img/avatar-default.png') ?>>
             <?php else: ?>
               <i class="bi bi-person-circle"></i>
             <?php endif; ?>

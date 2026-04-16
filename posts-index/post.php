@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/posts-model.php';
+require_once __DIR__ . '/../util/upload.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) {
@@ -64,9 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     exit;
 }
 
+// ── Recarrega dados atualizados após possível visualização/curtida ──────────
 $post = buscar_post_por_id($id);
 $tags = $post['tags'] ? explode(',', $post['tags']) : [];
 
+// ── Busca comentários ───────────────────────────────────────────────────────
 $pdo  = conectar();
 $stmt = $pdo->prepare("
     SELECT c.comentario, c.data, u.nome, u.avatar
@@ -78,6 +81,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([':p' => $id]);
 $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// ── Verifica se o usuário logado já curtiu ──────────────────────────────────
 $usuario_curtiu = false;
 if (isset($_SESSION['usuario_id'])) {
     $ck = $pdo->prepare("SELECT ativo FROM Curte_post WHERE usuario_id=:u AND post_id=:p");
@@ -140,10 +144,10 @@ include __DIR__ . '/../header.php';
 
       <!-- Autor + meta -->
       <div class="post-single-autor">
-        <img src="<?= htmlspecialchars($post['avatar'] ?? '../img/avatar-default.png') ?>"
+        <img src="<?= htmlspecialchars(img_url($post['avatar'] ?? '', '../img/avatar-default.png')) ?>"
              alt="<?= htmlspecialchars($post['autor']) ?>"
              class="post-single-avatar"
-             onerror="this.src='../img/avatar-default.png'">
+             <?= img_onerror('../img/avatar-default.png') ?>>
         <div class="post-single-autor-info">
           <h6><?= htmlspecialchars($post['autor']) ?></h6>
           <small>
@@ -153,16 +157,18 @@ include __DIR__ . '/../header.php';
                 <?= tempo_decorrido_posts($post['data_publicacao']) ?>
               </span>
             </span>
-            <span><i class="bi bi-eye"></i> <?= $post['visualizacoes'] ?> visualizações</span>          </small>
+            <span><i class="bi bi-eye"></i> <?= $post['visualizacoes'] ?> visualizações</span>
+            <span><i class="bi bi-heart"></i> <?= $post['curtidas'] ?> curtidas</span>
+          </small>
         </div>
       </div>
 
       <!-- Imagem destaque (se houver) -->
       <?php if (!empty($post['imagem'])): ?>
-        <img src="<?= htmlspecialchars($post['imagem']) ?>"
+        <img src="<?= htmlspecialchars(img_url($post['imagem'])) ?>"
              alt="Imagem do post"
              class="post-single-imagem"
-             onerror="this.style.display='none'">
+             onerror="this.onerror=null;this.style.display='none';">
       <?php endif; ?>
 
       <!-- Conteúdo -->
@@ -201,6 +207,11 @@ include __DIR__ . '/../header.php';
           <?= $post['comentarios'] ?> comentário<?= $post['comentarios'] != 1 ? 's' : '' ?>
         </span>
 
+        <span class="stat-pill">
+          <i class="bi bi-eye-fill"></i>
+          <?= $post['visualizacoes'] ?> visualização<?= $post['visualizacoes'] != 1 ? 'ões' : '' ?>
+        </span>
+
         <?php if (!$usuario_logado): ?>
           <span class="acoes-login-aviso">
             <a href="../auth/login.php">Faça login</a> para curtir e comentar
@@ -209,6 +220,7 @@ include __DIR__ . '/../header.php';
       </div>
     </article>
 
+    <!-- ── COMENTÁRIOS ── -->
     <section class="comentarios-section">
       <div class="comentarios-titulo">
         <i class="bi bi-chat-square-dots-fill" style="color:#611DF2;"></i>
@@ -216,12 +228,13 @@ include __DIR__ . '/../header.php';
         <span><?= count($comentarios) ?></span>
       </div>
 
+      <!-- Form comentar -->
       <?php if ($usuario_logado): ?>
         <form method="POST" class="form-comentario">
           <input type="hidden" name="acao" value="comentar">
-          <img src="<?= htmlspecialchars($_SESSION['usuario_avatar'] ?? '../img/avatar-default.png') ?>"
+          <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'] ?? '', '../img/avatar-default.png')) ?>"
                alt="Você" class="avatar-mini"
-               onerror="this.src='../img/avatar-default.png'">
+               <?= img_onerror('../img/avatar-default.png') ?>>
           <textarea name="comentario"
                     placeholder="Escreva um comentário..."
                     required minlength="2"
@@ -236,6 +249,7 @@ include __DIR__ . '/../header.php';
         </div>
       <?php endif; ?>
 
+      <!-- Lista de comentários -->
       <?php if (empty($comentarios)): ?>
         <div class="sem-comentarios">
           <i class="bi bi-chat-square"></i>
@@ -244,10 +258,10 @@ include __DIR__ . '/../header.php';
       <?php else: ?>
         <?php foreach ($comentarios as $c): ?>
           <div class="comentario-item">
-            <img src="<?= htmlspecialchars($c['avatar'] ?? '../img/avatar-default.png') ?>"
+            <img src="<?= htmlspecialchars(img_url($c['avatar'] ?? '', '../img/avatar-default.png')) ?>"
                  alt="<?= htmlspecialchars($c['nome']) ?>"
                  class="avatar-mini"
-                 onerror="this.src='../img/avatar-default.png'">
+                 <?= img_onerror('../img/avatar-default.png') ?>>
             <div class="comentario-corpo">
               <span class="comentario-autor"><?= htmlspecialchars($c['nome']) ?></span>
               <span class="comentario-tempo tempo-relativo" data-publicacao="<?= $c['data'] ?>">
@@ -260,8 +274,8 @@ include __DIR__ . '/../header.php';
       <?php endif; ?>
     </section>
 
-  </div>
-</div>
+  </div><!-- /post-single-wrap -->
+</div><!-- /container -->
 
 <template hx-get="footer.html" hx-target="#footer" hx-trigger="load"></template>
 <div id="footer"></div>

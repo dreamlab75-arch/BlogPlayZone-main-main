@@ -1,6 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/noticias-model.php';
+require_once __DIR__ . '/../util/upload.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) { header('Location: noticias-view.php'); exit; }
@@ -8,10 +9,12 @@ if (!$id) { header('Location: noticias-view.php'); exit; }
 $noticia = buscar_noticia_por_id($id);
 if (!$noticia) { header('Location: noticias-view.php'); exit; }
 
+// ── Registra visualização (1 por usuário por notícia) ─────────────────────
 if (isset($_SESSION['usuario_id'])) {
     registrar_visualizacao_noticia($id, $_SESSION['usuario_id']);
 }
 
+// ── Processa ação de curtir / comentar (POST) ─────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     if (!isset($_SESSION['usuario_id'])) {
         header('Location: ../auth/login.php');
@@ -49,8 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     exit;
 }
 
+// ── Recarrega dados atualizados ───────────────────────────────────────────
 $noticia = buscar_noticia_por_id($id);
 
+// ── Busca comentários ─────────────────────────────────────────────────────
 $pdo  = conectar_noticias();
 $stmt = $pdo->prepare("
     SELECT c.comentario, c.data, u.nome, u.avatar
@@ -62,6 +67,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([':n' => $id]);
 $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// ── Verifica se o usuário logado já curtiu ────────────────────────────────
 $usuario_curtiu = false;
 if (isset($_SESSION['usuario_id'])) {
     $ck = $pdo->prepare("SELECT ativo FROM Curte_noticia WHERE usuario_id=:u AND noticia_id=:n");
@@ -72,6 +78,7 @@ if (isset($_SESSION['usuario_id'])) {
 
 $usuario_logado = isset($_SESSION['usuario_id']);
 
+// Relacionadas
 $stmtRel = $pdo->prepare("
     SELECT id, titulo, imagem, categoria, data_publicacao
     FROM noticias WHERE categoria = :cat AND id != :id
@@ -105,9 +112,11 @@ include __DIR__ . '/../header.php';
 <div class="container noticia-single-wrap">
 
   <?php
+  // Botão de voltar inteligente: preserva a página/filtro de onde o usuário veio
   $voltar_url = 'noticias-view.php';
   if (!empty($_SERVER['HTTP_REFERER'])) {
       $ref = $_SERVER['HTTP_REFERER'];
+      // Aceita qualquer URL do próprio site que não seja a própria noticia.php
       if (strpos($ref, 'noticia.php') === false && (strpos($ref, 'noticias') !== false || strpos($ref, 'index.php') !== false || strpos($ref, $_SERVER['HTTP_HOST']) !== false)) {
           $voltar_url = htmlspecialchars($ref);
       }
@@ -125,9 +134,11 @@ include __DIR__ . '/../header.php';
 
   <div class="row g-4">
 
+    <!-- ARTIGO -->
     <div class="col-lg-8">
       <article class="noticia-artigo">
 
+        <!-- BREADCRUMB CATEGORIA -->
         <div class="noticia-breadcrumb">
           <span class="noticia-breadcrumb-cat"
                 style="color:<?= $cor_cat ?>;border-bottom:2px solid <?= $cor_cat ?>;">
@@ -137,14 +148,17 @@ include __DIR__ . '/../header.php';
           <span class="noticia-breadcrumb-tipo">NOTÍCIA</span>
         </div>
 
+        <!-- TÍTULO GRANDE -->
         <h1 class="noticia-titulo-grande"><?= htmlspecialchars($noticia['titulo']) ?></h1>
 
+        <!-- SUBTÍTULO / RESUMO -->
         <?php if (!empty($noticia['resumo'])): ?>
           <p class="noticia-resumo-destaque"><?= htmlspecialchars($noticia['resumo']) ?></p>
         <?php endif; ?>
 
         <hr class="noticia-divisor">
 
+        <!-- META: DATA + STATS -->
         <div class="noticia-meta-data">
           <span>
             <i class="bi bi-calendar3 me-1"></i>
@@ -155,16 +169,21 @@ include __DIR__ . '/../header.php';
             <?= tempo_decorrido($noticia['data_publicacao']) ?>
           </span>
           <span class="noticia-meta-sep">·</span>
-          <span><i class="bi bi-eye me-1"></i><?= $noticia['visualizacoes'] ?> visualizações</span>
+          <span><i class="bi bi-eye me-1"></i><?= $noticia['visualizacoes'] ?> views</span>
+          <span class="noticia-meta-sep">·</span>
+          <span><i class="bi bi-heart me-1"></i><?= $noticia['curtidas'] ?> curtidas</span>
+          <span class="noticia-meta-sep">·</span>
+          <span><i class="bi bi-chat-dots me-1"></i><?= $noticia['comentarios'] ?> comentários</span>
         </div>
 
         <hr class="noticia-divisor">
 
+        <!-- AUTOR -->
         <div class="noticia-autor-bloco">
-          <img src="<?= htmlspecialchars($noticia['autor_avatar'] ?? '../img/avatar-default.png') ?>"
+          <img src="<?= htmlspecialchars(img_url($noticia['autor_avatar'] ?? '', '../img/avatar-default.png')) ?>"
                alt="<?= htmlspecialchars($noticia['autor_nome']) ?>"
                class="noticia-autor-avatar"
-               onerror="this.src='../img/avatar-default.png'">
+               <?= img_onerror('../img/avatar-default.png') ?>>
           <div>
             <div class="noticia-autor-nome"><?= htmlspecialchars($noticia['autor_nome']) ?></div>
             <a href="mailto:" class="noticia-autor-email">Enviar E-mail</a>
@@ -173,15 +192,17 @@ include __DIR__ . '/../header.php';
 
         <hr class="noticia-divisor">
 
+        <!-- IMAGEM DESTAQUE -->
         <?php if (!empty($noticia['imagem'])): ?>
           <figure class="noticia-figura">
-            <img src="<?= htmlspecialchars(normalizar_imagem_noticia($noticia['imagem'])) ?>"
+            <img src="<?= htmlspecialchars(img_url($noticia['imagem'])) ?>"
                  alt="<?= htmlspecialchars($noticia['titulo']) ?>"
                  class="noticia-imagem-destaque"
-                 onerror="this.style.display='none'">
+                 onerror="this.onerror=null;this.style.display='none';">
           </figure>
         <?php endif; ?>
 
+        <!-- CONTEÚDO -->
         <div class="noticia-conteudo">
           <?php
           $primeiro = true;
@@ -189,7 +210,7 @@ include __DIR__ . '/../header.php';
             $p = trim($p);
             if ($p === '') continue;
             if ($primeiro): ?>
-              <p class=""><?= htmlspecialchars($p) ?></p>
+              <p class="noticia-lead"><?= htmlspecialchars($p) ?></p>
               <?php $primeiro = false;
             else: ?>
               <p><?= htmlspecialchars($p) ?></p>
@@ -197,6 +218,7 @@ include __DIR__ . '/../header.php';
           endforeach; ?>
         </div>
 
+        <!-- AÇÕES: curtir + stats -->
         <div class="post-acoes">
           <?php if ($usuario_logado): ?>
             <form method="POST" style="display:inline;">
@@ -218,6 +240,11 @@ include __DIR__ . '/../header.php';
             <?= $noticia['comentarios'] ?> comentário<?= $noticia['comentarios'] != 1 ? 's' : '' ?>
           </span>
 
+          <span class="stat-pill">
+            <i class="bi bi-eye-fill"></i>
+            <?= $noticia['visualizacoes'] ?> visualização<?= $noticia['visualizacoes'] != 1 ? 'ões' : '' ?>
+          </span>
+
           <?php if (!$usuario_logado): ?>
             <span class="acoes-login-aviso">
               <a href="../auth/login.php">Faça login</a> para curtir e comentar
@@ -225,6 +252,7 @@ include __DIR__ . '/../header.php';
           <?php endif; ?>
         </div>
 
+        <!-- COMPARTILHAR -->
         <div class="noticia-compartilhar">
           <span class="noticia-compartilhar-label">Compartilhar:</span>
           <a href="https://twitter.com/intent/tweet?text=<?= urlencode($noticia['titulo']) ?>&url=<?= urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>"
@@ -243,6 +271,7 @@ include __DIR__ . '/../header.php';
 
       </article>
 
+      <!-- ── COMENTÁRIOS ── -->
       <section class="comentarios-section">
         <div class="comentarios-titulo">
           <i class="bi bi-chat-square-dots-fill" style="color:#611DF2;"></i>
@@ -253,9 +282,9 @@ include __DIR__ . '/../header.php';
         <?php if ($usuario_logado): ?>
           <form method="POST" class="form-comentario">
             <input type="hidden" name="acao" value="comentar">
-            <img src="<?= htmlspecialchars($_SESSION['usuario_avatar'] ?? '../img/avatar-default.png') ?>"
+            <img src="<?= htmlspecialchars(img_url($_SESSION['usuario_avatar'] ?? '', '../img/avatar-default.png')) ?>"
                  alt="Você" class="avatar-mini"
-                 onerror="this.src='../img/avatar-default.png'">
+                 <?= img_onerror('../img/avatar-default.png') ?>>
             <textarea name="comentario"
                       placeholder="Escreva um comentário..."
                       required minlength="2"
@@ -278,10 +307,10 @@ include __DIR__ . '/../header.php';
         <?php else: ?>
           <?php foreach ($comentarios as $c): ?>
             <div class="comentario-item">
-              <img src="<?= htmlspecialchars($c['avatar'] ?? '../img/avatar-default.png') ?>"
+              <img src="<?= htmlspecialchars(img_url($c['avatar'] ?? '', '../img/avatar-default.png')) ?>"
                    alt="<?= htmlspecialchars($c['nome']) ?>"
                    class="avatar-mini"
-                   onerror="this.src='../img/avatar-default.png'">
+                   <?= img_onerror('../img/avatar-default.png') ?>>
               <div class="comentario-corpo">
                 <span class="comentario-autor"><?= htmlspecialchars($c['nome']) ?></span>
                 <span class="comentario-tempo tempo-relativo" data-publicacao="<?= $c['data'] ?>">
@@ -294,6 +323,7 @@ include __DIR__ . '/../header.php';
         <?php endif; ?>
       </section>
 
+      <!-- RELACIONADAS -->
       <?php if (!empty($relacionadas)): ?>
       <section class="noticia-relacionadas">
         <h3 class="noticia-relacionadas-titulo">
@@ -323,9 +353,9 @@ include __DIR__ . '/../header.php';
       </section>
       <?php endif; ?>
 
-    </div>
+    </div><!-- /col-lg-8 -->
 
-
+    <!-- SIDEBAR -->
     <div class="col-lg-4">
       <div class="news-sidebar" style="top:90px;">
         <h4><i class="bi bi-fire me-2"></i>Mais Lidas</h4>

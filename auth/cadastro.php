@@ -24,7 +24,7 @@
         <div class="alert alert-danger"><?= htmlspecialchars($_GET['erro']) ?></div>
       <?php endif; ?>
 
-      <form action="ctrl-cadastro.php" method="POST">
+      <form action="ctrl-cadastro.php" method="POST" enctype="multipart/form-data">
 
         <div class="mb-3">
           <label class="form-label">Nome</label>
@@ -38,12 +38,18 @@
 
         <div class="mb-3">
           <label class="form-label">Senha</label>
-          <input type="password" name="senha" class="form-control auth-input" placeholder="Mínimo 6 caracteres" required>
+          <input type="password" name="senha" class="form-control auth-input" placeholder="Mínimo 6 caracteres" required minlength="6">
         </div>
 
         <div class="mb-4">
-          <label class="form-label">Avatar <span class="text-muted">(URL da imagem)</span></label>
-          <input type="text" name="avatar" class="form-control auth-input" placeholder="https://...">
+          <label class="form-label">Avatar <span class="text-muted">(opcional)</span></label>
+          <input type="file" name="avatar" class="form-control auth-input"
+                 accept="image/jpeg,image/png,image/webp,image/gif"
+                 onchange="previewAvatar(this)">
+          <div id="avatarPreviewWrap" style="display:none;margin-top:10px;text-align:center;">
+            <img id="avatarPreview" src="" alt="Preview"
+                 style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #611DF2;">
+          </div>
         </div>
 
         <button type="submit" class="btn btn-ver-mais w-100">Cadastrar-se</button>
@@ -55,5 +61,18 @@
     </div>
   </div>
 
+<script>
+function previewAvatar(input) {
+  const wrap = document.getElementById('avatarPreviewWrap');
+  const img  = document.getElementById('avatarPreview');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; wrap.style.display = 'block'; };
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+</script>
 </body>
 </html>

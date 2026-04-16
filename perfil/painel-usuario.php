@@ -8,6 +8,7 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 require_once __DIR__ . '/../posts-index/posts-model.php';
+require_once __DIR__ . '/../util/upload.php';
 
 $pdo        = conectar();
 $usuario_id = (int)$_SESSION['usuario_id'];
@@ -89,10 +90,10 @@ if ($pode_noticias) {
     <!-- Avatar + nome -->
     <div class="painel-sidebar-perfil">
       <div class="painel-sidebar-avatar-wrap">
-        <img src="<?= htmlspecialchars($usuario['avatar'] ?? '../img/avatar-default.png') ?>"
+        <img src="<?= htmlspecialchars(img_url($usuario['avatar'] ?? '', '../img/avatar-default.png')) ?>"
              alt="Avatar"
              class="painel-sidebar-avatar"
-             onerror="this.src='../img/avatar-default.png'">
+             <?= img_onerror('../img/avatar-default.png') ?>>
       </div>
       <div class="painel-sidebar-nome"><?= htmlspecialchars($usuario['nome']) ?></div>
       <div class="painel-sidebar-perfil-tipo">
@@ -361,9 +362,9 @@ if ($pode_noticias) {
 
           <!-- Avatar preview -->
           <div class="painel-avatar-preview-wrap mb-4">
-            <img src="<?= htmlspecialchars($usuario['avatar'] ?? '../img/avatar-default.png') ?>"
+            <img src="<?= htmlspecialchars(img_url($usuario['avatar'] ?? '', '../img/avatar-default.png')) ?>"
                  alt="Avatar" id="avatarPreview" class="painel-avatar-preview"
-                 onerror="this.src='../img/avatar-default.png'">
+                 <?= img_onerror('../img/avatar-default.png') ?>>
           </div>
 
           <div class="mb-3">
