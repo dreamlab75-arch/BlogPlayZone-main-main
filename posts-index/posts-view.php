@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . "/posts-model.php";
+require_once __DIR__ . "/../util/upload.php";
 
 $pagina      = isset($_GET['page'])  ? max(1, (int)$_GET['page']) : 1;
 $busca       = $_GET['busca']  ?? '';
@@ -155,9 +156,9 @@ include __DIR__ . '/../header.php';
     <div class="post-card">
       <div class="post-author">
         <div class="post-avatar">
-          <img src="<?= htmlspecialchars($linha_posts['avatar'] ?? '../img/avatar-default.png') ?>"
+          <img src="<?= htmlspecialchars(img_url($linha_posts['avatar'] ?? '', '/img/avatar-default.png')) ?>"
                alt="<?= htmlspecialchars($linha_posts['autor']) ?>"
-               onerror="this.src='../img/avatar-default.png'">
+               <?= img_onerror('/img/avatar-default.png') ?>>
         </div>
         <div class="post-author-info">
           <h6><?= htmlspecialchars($linha_posts['autor']) ?></h6>
