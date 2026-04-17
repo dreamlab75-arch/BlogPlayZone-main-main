@@ -31,7 +31,6 @@ $pdo = conectar();
 $pdo->beginTransaction();
 
 try {
-    // Insere o post primeiro para ter o ID
     $stmt = $pdo->prepare("
         INSERT INTO posts (titulo, conteudo, imagem, usuario_id)
         VALUES (:titulo, :conteudo, :imagem, :usuario_id)
@@ -39,12 +38,11 @@ try {
     $stmt->execute([
         ':titulo'     => $titulo,
         ':conteudo'   => $conteudo,
-        ':imagem'     => null, // temporário
+        ':imagem'     => null,
         ':usuario_id' => $usuario_id,
     ]);
     $post_id = (int)$pdo->lastInsertId();
 
-    // Upload da imagem agora que temos o ID
     $pasta  = __DIR__ . '/posts_img';
     $imagem = salvar_imagem('imagem', 'post', $post_id, $pasta);
 

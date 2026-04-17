@@ -1,7 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Só usuários logados
 if (!isset($_SESSION['usuario_id'])) {
     header('Location: ../auth/login.php?erro=Faça login para acessar seu painel');
     exit;
@@ -13,7 +12,6 @@ require_once __DIR__ . '/../util/upload.php';
 $pdo        = conectar();
 $usuario_id = (int)$_SESSION['usuario_id'];
 
-// Busca dados atualizados do usuário no banco
 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
 $stmt->execute([':id' => $usuario_id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,10 +21,8 @@ if (!$usuario) {
     exit;
 }
 
-// Aba ativa (posts | conta)
 $aba = $_GET['aba'] ?? 'posts';
 
-// Busca posts do usuário
 $stmtPosts = $pdo->prepare("
     SELECT
         p.id, p.titulo, p.conteudo, p.imagem, p.data_publicacao,
@@ -47,14 +43,11 @@ $stmtPosts = $pdo->prepare("
 $stmtPosts->execute([':uid' => $usuario_id]);
 $posts = $stmtPosts->fetchAll(PDO::FETCH_ASSOC);
 
-// Busca todas as tags para o modal de edição
 $todasTags = buscar_tags();
 
-// Verifica se o usuário pode gerenciar notícias (adm=1 ou jornalista=3)
 $perfil_id_sessao = (int)($_SESSION['usuario_perfil_id'] ?? $usuario['perfil_id'] ?? 2);
 $pode_noticias = in_array($perfil_id_sessao, [1, 3]);
 
-// Busca notícias do usuário (apenas se tiver permissão)
 $noticias = [];
 if ($pode_noticias) {
     require_once __DIR__ . '/../noticias-index/noticias-model.php';
@@ -84,10 +77,8 @@ if ($pode_noticias) {
 <body class="painel-body">
 <div class="painel-layout">
 
-  <!-- ========== SIDEBAR ========== -->
   <aside class="painel-sidebar">
 
-    <!-- Avatar + nome -->
     <div class="painel-sidebar-perfil">
       <div class="painel-sidebar-avatar-wrap">
         <img src="<?= htmlspecialchars(img_url($usuario['avatar'] ?? '', '/img/avatar-default.png')) ?>"
@@ -111,7 +102,6 @@ if ($pode_noticias) {
       <?php endif; ?>
     </div>
 
-    <!-- Stats rápidas -->
     <div class="painel-sidebar-stats">
       <div class="painel-stat">
         <span class="painel-stat-num"><?= count($posts) ?></span>
@@ -133,7 +123,7 @@ if ($pode_noticias) {
       <?php endif; ?>
     </div>
 
-    <!-- Navegação -->
+
     <nav class="painel-nav">
       <p class="adm-nav-label">Menu</p>
       <a href="?aba=posts" class="adm-nav-item <?= $aba === 'posts' ? 'active' : '' ?>">
@@ -160,10 +150,8 @@ if ($pode_noticias) {
 
   </aside>
 
-  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
   <main class="painel-main">
 
-    <!-- Topbar -->
     <div class="adm-topbar">
       <h4 class="adm-page-titulo">
         <?php
@@ -176,7 +164,6 @@ if ($pode_noticias) {
       </h4>
     </div>
 
-    <!-- Mensagens -->
     <?php if (isset($_GET['sucesso'])): ?>
       <div class="alert alert-success"><?= htmlspecialchars($_GET['sucesso']) ?></div>
     <?php endif; ?>
@@ -184,7 +171,6 @@ if ($pode_noticias) {
       <div class="alert alert-danger"><?= htmlspecialchars($_GET['erro']) ?></div>
     <?php endif; ?>
 
-    <!-- ===== ABA: MEUS POSTS ===== -->
     <?php if ($aba === 'posts'): ?>
 
       <?php if (empty($posts)): ?>
@@ -213,7 +199,6 @@ if ($pode_noticias) {
           ?>
           <div class="painel-post-card">
 
-            <!-- Imagem ou placeholder -->
             <div class="painel-post-thumb"
                  style="<?= $post['imagem'] ? 'background-image:url('.htmlspecialchars($post['imagem']).')' : '' ?>">
               <?php if (!$post['imagem']): ?>
@@ -221,7 +206,6 @@ if ($pode_noticias) {
               <?php endif; ?>
             </div>
 
-            <!-- Tags -->
             <?php if (!empty($tags_post)): ?>
             <div class="painel-post-tags">
               <?php foreach (array_slice($tags_post, 0, 2) as $tag): ?>
@@ -235,20 +219,16 @@ if ($pode_noticias) {
             </div>
             <?php endif; ?>
 
-            <!-- Título -->
             <h6 class="painel-post-titulo"><?= htmlspecialchars($post['titulo']) ?></h6>
 
-            <!-- Trecho -->
             <p class="painel-post-trecho"><?= htmlspecialchars($trecho) ?>...</p>
 
-            <!-- Stats -->
             <div class="painel-post-stats">
               <span><i class="bi bi-heart-fill" style="color:#e74c3c;"></i> <?= $post['curtidas'] ?></span>
               <span><i class="bi bi-chat-fill" style="color:#611DF2;"></i> <?= $post['comentarios'] ?></span>
               <span><i class="bi bi-eye-fill" style="color:#611DF2;"></i> <?= $post['visualizacoes'] ?></span>
             </div>
 
-            <!-- Tempo -->
             <div class="painel-post-data">
               <i class="bi bi-clock"></i>
               <span class="tempo-relativo" data-publicacao="<?= $post['data_publicacao'] ?>">
@@ -256,7 +236,6 @@ if ($pode_noticias) {
               </span>
             </div>
 
-            <!-- Ações -->
             <div class="painel-post-acoes">
               <a href="../posts-index/post.php?id=<?= $post['id'] ?>"
                  class="painel-btn-ver" title="Ver post">
@@ -278,7 +257,6 @@ if ($pode_noticias) {
 
       <?php endif; ?>
 
-    <!-- ===== ABA: MINHAS NOTÍCIAS ===== -->
     <?php elseif ($aba === 'noticias' && $pode_noticias): ?>
 
       <?php if (empty($noticias)): ?>
@@ -298,7 +276,6 @@ if ($pode_noticias) {
           <?php foreach ($noticias as $noticia): ?>
           <div class="painel-post-card">
 
-            <!-- Thumb -->
             <div class="painel-post-thumb"
                  style="<?= $noticia['imagem'] ? 'background-image:url('.htmlspecialchars(normalizar_imagem_noticia($noticia['imagem'])).')' : '' ?>">
               <?php if (!$noticia['imagem']): ?>
@@ -306,25 +283,20 @@ if ($pode_noticias) {
               <?php endif; ?>
             </div>
 
-            <!-- Categoria -->
             <div class="painel-post-tags">
               <span class="badge <?= categoria_para_badge($noticia['categoria']) ?>" style="font-size:.7rem;">
                 <?= strtoupper($noticia['categoria']) ?>
               </span>
             </div>
 
-            <!-- Título -->
             <h6 class="painel-post-titulo"><?= htmlspecialchars($noticia['titulo']) ?></h6>
 
-            <!-- Resumo -->
             <p class="painel-post-trecho"><?= htmlspecialchars(mb_substr($noticia['resumo'], 0, 100)) ?>...</p>
 
-            <!-- Stats -->
             <div class="painel-post-stats">
               <span><i class="bi bi-eye-fill" style="color:#611DF2;"></i> <?= $noticia['visualizacoes'] ?></span>
             </div>
 
-            <!-- Tempo -->
             <div class="painel-post-data">
               <i class="bi bi-clock"></i>
               <span class="tempo-relativo" data-publicacao="<?= $noticia['data_publicacao'] ?>">
@@ -332,7 +304,6 @@ if ($pode_noticias) {
               </span>
             </div>
 
-            <!-- Ações -->
             <div class="painel-post-acoes">
               <a href="../noticias-index/noticia.php?id=<?= $noticia['id'] ?>"
                  class="painel-btn-ver" title="Ver notícia">
@@ -354,13 +325,11 @@ if ($pode_noticias) {
 
       <?php endif; ?>
 
-    <!-- ===== ABA: EDITAR CONTA ===== -->
     <?php elseif ($aba === 'conta'): ?>
 
       <div class="adm-card" style="max-width:600px;">
         <form action="ctrl-editar-conta.php" method="POST" enctype="multipart/form-data">
 
-          <!-- Avatar preview -->
           <div class="painel-avatar-preview-wrap mb-4">
             <img src="<?= htmlspecialchars(img_url($usuario['avatar'] ?? '', '/img/avatar-default.png')) ?>"
                  alt="Avatar" id="avatarPreview" class="painel-avatar-preview"
@@ -424,7 +393,6 @@ if ($pode_noticias) {
   </main>
 </div>
 
-<!-- ========== MODAL CONFIRMAR DELETAR ========== -->
 <div class="adm-modal-overlay" id="modalDeletar">
   <div class="adm-modal" style="max-width:420px;">
     <h5 class="fw-bold mb-2" style="color:#1a0a4a;">Deletar post?</h5>
@@ -439,7 +407,6 @@ if ($pode_noticias) {
   </div>
 </div>
 
-<!-- ========== MODAL EDITAR POST ========== -->
 <div class="adm-modal-overlay" id="modalEditar">
   <div class="adm-modal" style="max-width:620px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -499,7 +466,6 @@ if ($pode_noticias) {
 </div>
 
 <script>
-// ===== PREVIEW AVATAR =====
 function previewAvatar(input) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
@@ -510,7 +476,6 @@ function previewAvatar(input) {
   }
 }
 
-// ===== AUTO-HIDE ALERTAS =====
 document.querySelectorAll('.alert').forEach(el => {
   setTimeout(() => {
     el.style.transition = 'opacity .5s';
@@ -519,7 +484,6 @@ document.querySelectorAll('.alert').forEach(el => {
   }, 3500);
 });
 
-// ===== MODAL DELETAR =====
 function confirmarDeletar(id, titulo) {
   document.getElementById('modalDeletarNome').textContent = 'Tem certeza que deseja deletar "' + titulo + '"? Esta ação não pode ser desfeita.';
   document.getElementById('btnConfirmarDeletar').href = 'ctrl-deletar-post.php?id=' + id;
@@ -532,14 +496,11 @@ document.getElementById('modalDeletar').addEventListener('click', function(e) {
   if (e.target === this) fecharDeletar();
 });
 
-// ===== MODAL EDITAR POST =====
 function abrirEditarPost(id, titulo, conteudo, imagem, tagsStr) {
   document.getElementById('editPostId').value   = id;
   document.getElementById('editTitulo').value   = titulo;
   document.getElementById('editConteudo').value = conteudo;
-  // editImagem é file input — não pode ser preenchido via JS por segurança
 
-  // Desmarca todas as tags e marca as do post
   const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()) : [];
   document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
     cb.checked = tags.includes(cb.getAttribute('data-nome'));
@@ -557,7 +518,6 @@ document.getElementById('modalEditar').addEventListener('click', function(e) {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharEditar(); fecharDeletar(); } });
 
-// Limita tags a 5 no modal de edição
 document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
   cb.addEventListener('change', function() {
     const sel = document.querySelectorAll('#editTagsGrid input:checked');
@@ -566,7 +526,6 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
 });
 </script>
 
-<!-- ========== MODAL DELETAR NOTÍCIA ========== -->
 <?php if ($pode_noticias): ?>
 <div class="adm-modal-overlay" id="modalDeletarNoticia">
   <div class="adm-modal" style="max-width:420px;">
@@ -582,7 +541,6 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
   </div>
 </div>
 
-<!-- ========== MODAL EDITAR NOTÍCIA ========== -->
 <div class="adm-modal-overlay" id="modalEditarNoticia">
   <div class="adm-modal" style="max-width:660px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -650,7 +608,6 @@ document.querySelectorAll('#editTagsGrid input[type=checkbox]').forEach(cb => {
 <?php endif; ?>
 
 <script>
-// ===== MODAL DELETAR NOTÍCIA =====
 function confirmarDeletarNoticia(id, titulo) {
   document.getElementById('modalDeletarNoticiaNome').textContent =
     'Tem certeza que deseja deletar "' + titulo + '"? Esta ação não pode ser desfeita.';
@@ -664,13 +621,11 @@ document.getElementById('modalDeletarNoticia')?.addEventListener('click', functi
   if (e.target === this) fecharDeletarNoticia();
 });
 
-// ===== MODAL EDITAR NOTÍCIA =====
 function abrirEditarNoticia(id, titulo, resumo, conteudo, imagem, categoria) {
   document.getElementById('editNoticiaId').value        = id;
   document.getElementById('editNoticiaTitulo').value    = titulo;
   document.getElementById('editNoticiaResumo').value    = resumo;
   document.getElementById('editNoticiaConteudo').value  = conteudo;
-  // editNoticiaImagem é file input — não pode ser preenchido via JS por segurança
   const sel = document.getElementById('editNoticiaCategoria');
   if (sel) sel.value = categoria;
   document.getElementById('modalEditarNoticia').style.display = 'flex';
@@ -684,7 +639,6 @@ document.getElementById('modalEditarNoticia')?.addEventListener('click', functio
   if (e.target === this) fecharEditarNoticia();
 });
 
-// Fecha todos com ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     fecharEditarNoticia();
@@ -694,7 +648,6 @@ document.addEventListener('keydown', e => {
 });
 </script>
 
-<!-- ========== MODAL TROCAR SENHA ========== -->
 <div class="adm-modal-overlay" id="modalSenha">
   <div class="adm-modal" style="max-width:440px;">
     <div class="d-flex justify-content-between align-items-center mb-3">

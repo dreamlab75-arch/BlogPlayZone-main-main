@@ -36,7 +36,6 @@ if (strlen($conteudo) < 50) { header('Location: escrever-noticia.php?erro=' . ur
 if (!in_array($categoria, $categorias_validas)) { header('Location: escrever-noticia.php?erro=' . urlencode('Categoria inválida.')); exit; }
 
 try {
-    // Insere sem imagem primeiro
     $stmt = $pdo->prepare("
         INSERT INTO noticias (titulo, resumo, conteudo, imagem, categoria, usuario_id)
         VALUES (:titulo, :resumo, :conteudo, :imagem, :categoria, :usuario_id)
@@ -51,7 +50,6 @@ try {
     ]);
     $noticia_id = (int)$pdo->lastInsertId();
 
-    // Upload da imagem com o ID gerado
     $pasta  = __DIR__ . '/noticias_img';
     $imagem = salvar_imagem('imagem', 'noticia', $noticia_id, $pasta);
 

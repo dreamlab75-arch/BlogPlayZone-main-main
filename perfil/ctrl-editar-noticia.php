@@ -45,7 +45,6 @@ if (strlen($titulo) < 5 || !in_array($categoria, $categorias_validas)) {
 }
 
 try {
-    // Upload nova imagem (se enviada)
     $pasta  = __DIR__ . '/../noticias-index/noticias_img';
     $imagem = salvar_imagem('imagem', 'noticia', $noticia_id, $pasta, $noticia['imagem'] ?? '');
 

@@ -36,7 +36,6 @@ if ($stmtEmail->fetch()) {
     exit;
 }
 
-// Avatar: busca o atual antes de tentar upload
 $stmtAtual = $pdo->prepare("SELECT avatar FROM usuarios WHERE id = :id");
 $stmtAtual->execute([':id' => $usuario_id]);
 $atual = $stmtAtual->fetch(PDO::FETCH_ASSOC);
@@ -45,7 +44,6 @@ try {
     $pasta  = __DIR__ . '/avatares';
     $avatar = salvar_imagem('avatar', 'avatar', $usuario_id, $pasta, $atual['avatar'] ?? '');
 
-    // Se não enviou nova imagem, mantém a atual
     $avatar_final = $avatar ?? $atual['avatar'];
 
     $pdo->prepare("UPDATE usuarios SET nome=:nome, email=:email, avatar=:avatar, bio=:bio WHERE id=:id")

@@ -15,7 +15,6 @@ if (!$post) {
     exit;
 }
 
-// ── Registra visualização (1 por usuário por post) ─────────────────────────
 if (isset($_SESSION['usuario_id'])) {
     try {
         $pdo = conectar();
@@ -23,10 +22,9 @@ if (isset($_SESSION['usuario_id'])) {
             INSERT OR IGNORE INTO Visualiza_post (usuario_id, post_id)
             VALUES (:uid, :pid)
         ")->execute([':uid' => $_SESSION['usuario_id'], ':pid' => $id]);
-    } catch (Exception $e) { /* silencia */ }
+    } catch (Exception $e) {}
 }
 
-// ── Processa ação de curtir / descurtir (POST) ─────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     if (!isset($_SESSION['usuario_id'])) {
         header('Location: ../auth/login.php');
@@ -36,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     $pdo = conectar();
 
     if ($_POST['acao'] === 'curtir') {
-        // Upsert: se já existe, alterna ativo; senão insere
         $existe = $pdo->prepare("SELECT ativo FROM Curte_post WHERE usuario_id=:u AND post_id=:p");
         $existe->execute([':u' => $uid, ':p' => $id]);
         $row = $existe->fetch(PDO::FETCH_ASSOC);
@@ -65,11 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
     exit;
 }
 
-// ── Recarrega dados atualizados após possível visualização/curtida ──────────
 $post = buscar_post_por_id($id);
 $tags = $post['tags'] ? explode(',', $post['tags']) : [];
 
-// ── Busca comentários ───────────────────────────────────────────────────────
 $pdo  = conectar();
 $stmt = $pdo->prepare("
     SELECT c.comentario, c.data, u.nome, u.avatar
@@ -81,7 +76,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([':p' => $id]);
 $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ── Verifica se o usuário logado já curtiu ──────────────────────────────────
 $usuario_curtiu = false;
 if (isset($_SESSION['usuario_id'])) {
     $ck = $pdo->prepare("SELECT ativo FROM Curte_post WHERE usuario_id=:u AND post_id=:p");
@@ -113,7 +107,6 @@ include __DIR__ . '/../header.php';
 <div class="container">
   <div class="post-single-wrap">
 
-    <!-- VOLTAR -->
     <?php
     $voltar_url = 'posts-view.php';
     if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -127,10 +120,8 @@ include __DIR__ . '/../header.php';
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
 
-    <!-- CARD PRINCIPAL -->
     <article class="post-single-card">
 
-      <!-- Tags -->
       <?php if (!empty($tags)): ?>
       <div class="post-single-tags">
         <?php foreach ($tags as $tag): ?>
@@ -139,10 +130,8 @@ include __DIR__ . '/../header.php';
       </div>
       <?php endif; ?>
 
-      <!-- Título -->
       <h1 class="post-single-titulo"><?= htmlspecialchars($post['titulo']) ?></h1>
 
-      <!-- Autor + meta -->
       <div class="post-single-autor">
         <img src="<?= htmlspecialchars(img_url($post['avatar'] ?? '', '/img/avatar-default.png')) ?>"
              alt="<?= htmlspecialchars($post['autor']) ?>"
@@ -163,7 +152,6 @@ include __DIR__ . '/../header.php';
         </div>
       </div>
 
-      <!-- Imagem destaque (se houver) -->
       <?php if (!empty($post['imagem'])): ?>
         <img src="<?= htmlspecialchars(img_url($post['imagem'])) ?>"
              alt="Imagem do post"
@@ -171,10 +159,8 @@ include __DIR__ . '/../header.php';
              onerror="this.onerror=null;this.style.display='none';">
       <?php endif; ?>
 
-      <!-- Conteúdo -->
       <div class="post-single-body">
         <?php
-        // Renderiza parágrafos respeitando quebras de linha do banco
         $paragrafos = explode("\n", trim($post['conteudo']));
         foreach ($paragrafos as $p) {
             $p = trim($p);
@@ -185,7 +171,6 @@ include __DIR__ . '/../header.php';
         ?>
       </div>
 
-      <!-- AÇÕES: curtir + stats -->
       <div class="post-acoes">
         <?php if ($usuario_logado): ?>
           <form method="POST" style="display:inline;">
@@ -220,7 +205,6 @@ include __DIR__ . '/../header.php';
       </div>
     </article>
 
-    <!-- ── COMENTÁRIOS ── -->
     <section class="comentarios-section">
       <div class="comentarios-titulo">
         <i class="bi bi-chat-square-dots-fill" style="color:#611DF2;"></i>
@@ -228,7 +212,6 @@ include __DIR__ . '/../header.php';
         <span><?= count($comentarios) ?></span>
       </div>
 
-      <!-- Form comentar -->
       <?php if ($usuario_logado): ?>
         <form method="POST" class="form-comentario">
           <input type="hidden" name="acao" value="comentar">
@@ -249,7 +232,6 @@ include __DIR__ . '/../header.php';
         </div>
       <?php endif; ?>
 
-      <!-- Lista de comentários -->
       <?php if (empty($comentarios)): ?>
         <div class="sem-comentarios">
           <i class="bi bi-chat-square"></i>
@@ -274,8 +256,8 @@ include __DIR__ . '/../header.php';
       <?php endif; ?>
     </section>
 
-  </div><!-- /post-single-wrap -->
-</div><!-- /container -->
+  </div>
+</div>
 
 <template hx-get="footer.html" hx-target="#footer" hx-trigger="load"></template>
 <div id="footer"></div>

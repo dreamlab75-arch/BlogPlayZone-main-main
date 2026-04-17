@@ -25,7 +25,6 @@ if (!$post_id || strlen($titulo) < 5 || strlen($conteudo) < 50) {
     exit;
 }
 
-// Verifica propriedade
 $stmt = $pdo->prepare("SELECT usuario_id, imagem FROM posts WHERE id = :id");
 $stmt->execute([':id' => $post_id]);
 $post = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -38,11 +37,9 @@ if (!$post || ((int)$post['usuario_id'] !== $usuario_id && !$eh_adm)) {
 
 $pdo->beginTransaction();
 try {
-    // Upload nova imagem (se enviada)
     $pasta  = __DIR__ . '/../posts-index/posts_img';
     $imagem = salvar_imagem('imagem', 'post', $post_id, $pasta, $post['imagem'] ?? '');
 
-    // Se não enviou nova imagem, mantém a atual
     $imagem_final = $imagem ?? $post['imagem'];
 
     $pdo->prepare("

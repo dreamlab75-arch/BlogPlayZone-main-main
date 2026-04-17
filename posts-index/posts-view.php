@@ -14,7 +14,6 @@ $total_posts      = contar_posts($busca, $tagsFiltro);
 $total_paginas    = max(1, ceil($total_posts / $limite));
 $tagsDisponiveis  = buscar_tags();
 
-// Monta query string base (sem page) para paginação
 function query_sem_page($busca, $ordem, $tagsFiltro) {
     $params = [];
     if ($busca)              $params[] = 'busca=' . urlencode($busca);
@@ -43,11 +42,10 @@ $usuario_perfil = $_SESSION['usuario_perfil'] ?? '';
 </head>
 <body>
 <?php
-$base = '../'; // prefixo de caminho para a raiz, usado pelo header.php
+$base = '../'; 
 include __DIR__ . '/../header.php';
 ?>
 
-<!-- HERO -->
 <div class="posts-page-hero">
   <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
@@ -68,11 +66,9 @@ include __DIR__ . '/../header.php';
     <i class="bi bi-arrow-left"></i> Voltar ao início
   </a>
 
-  <!-- FILTRO BAR -->
   <form method="GET" id="formFiltro" class="filtro-bar">
     <div class="row g-2 align-items-center">
 
-      <!-- Busca -->
       <div class="col-md-4">
         <div class="position-relative">
           <input type="text" name="busca" class="form-control" placeholder="Buscar por título..."
@@ -82,7 +78,6 @@ include __DIR__ . '/../header.php';
         </div>
       </div>
 
-      <!-- Ordenação -->
       <div class="col-md-3">
         <select name="ordem" class="form-select">
           <option value="recentes" <?= $ordem=='recentes'?'selected':'' ?>>🕒 Mais recentes</option>
@@ -91,7 +86,6 @@ include __DIR__ . '/../header.php';
         </select>
       </div>
 
-      <!-- Tags dropdown -->
       <div class="col-md-3 tags-dropdown-wrap">
         <button type="button" class="btn-tags-toggle w-100 <?= !empty($tagsFiltro)?'ativo':'' ?>"
                 onclick="toggleTagsDropdown()" id="btnTagsToggle">
@@ -109,7 +103,6 @@ include __DIR__ . '/../header.php';
         </div>
       </div>
 
-      <!-- Botão filtrar -->
       <div class="col-md-2">
         <button type="submit" class="btn-filtrar w-100">
           <i class="bi bi-funnel me-1"></i>Filtrar
@@ -118,7 +111,6 @@ include __DIR__ . '/../header.php';
 
     </div>
 
-    <!-- Pills das tags selecionadas -->
     <?php if (!empty($tagsFiltro)): ?>
     <div class="tags-selecionadas-bar mt-3">
       <?php foreach ($tagsFiltro as $t): ?>
@@ -134,7 +126,6 @@ include __DIR__ . '/../header.php';
     <?php endif; ?>
   </form>
 
-  <!-- INFO RESULTADO -->
   <div class="resultado-info">
     <?php if ($busca || !empty($tagsFiltro)): ?>
       Mostrando <strong><?= $total_posts ?></strong> resultado<?= $total_posts != 1 ? 's' : '' ?>
@@ -146,7 +137,6 @@ include __DIR__ . '/../header.php';
     <?php endif; ?>
   </div>
 
-  <!-- LISTA DE POSTS -->
   <?php
   $posts_encontrados = false;
   while ($linha_posts = $result_set_posts->fetch(PDO::FETCH_ASSOC)):
@@ -207,7 +197,6 @@ include __DIR__ . '/../header.php';
     </div>
   <?php endif; ?>
 
-  <!-- PAGINAÇÃO -->
   <?php if ($total_paginas > 1): ?>
   <nav class="paginacao">
     <?php if ($pagina > 1): ?>
@@ -217,7 +206,6 @@ include __DIR__ . '/../header.php';
     <?php endif; ?>
 
     <?php
-    // Lógica de páginas: mostra max 5 ao redor da atual
     $inicio = max(1, $pagina - 2);
     $fim    = min($total_paginas, $pagina + 2);
     if ($inicio > 1): ?>
@@ -242,9 +230,8 @@ include __DIR__ . '/../header.php';
   </nav>
   <?php endif; ?>
 
-</div><!-- /container -->
+</div>
 
-<!-- ========== MODAL CRIAR POST ========== -->
 <?php if ($usuario_logado): ?>
 <div class="modal-criar-overlay" id="modalCriarOverlay" onclick="fecharModalFora(event)">
   <div class="modal-criar-box" id="modalCriarBox">
@@ -252,14 +239,12 @@ include __DIR__ . '/../header.php';
     <p class="modal-subtitulo">Compartilhe sua opinião, review ou experiência com a comunidade</p>
 
     <form method="POST" action="ctrl-post.php" id="formCriarPost" enctype="multipart/form-data">
-      <!-- Título -->
       <div class="mb-3">
         <label class="form-label">Título *</label>
         <input type="text" name="titulo" class="form-control"
                placeholder="Ex: Por que Elden Ring é uma obra-prima..." required maxlength="200">
       </div>
 
-      <!-- Conteúdo -->
       <div class="mb-3">
         <label class="form-label">Conteúdo *</label>
         <textarea name="conteudo" class="form-control"
@@ -267,7 +252,6 @@ include __DIR__ . '/../header.php';
         <div class="form-text" style="font-size:.78rem;color:#aaa;">Mínimo 50 caracteres</div>
       </div>
 
-      <!-- Imagem -->
       <div class="mb-3">
         <label class="form-label">Imagem <span style="font-weight:400;color:#aaa;">(opcional)</span></label>
         <input type="file" name="imagem" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif">
@@ -275,12 +259,10 @@ include __DIR__ . '/../header.php';
 
       <div class="modal-divider"></div>
 
-      <!-- Tags -->
       <div class="mb-4">
         <label class="form-label">Tags <span style="font-weight:400;color:#aaa;">(selecione até 5)</span></label>
         <div class="tags-modal-grid">
           <?php
-          // Rebusca tags para o modal
           $tagsModal = buscar_tags();
           foreach ($tagsModal as $tag): ?>
             <div class="tag-check-pill">
@@ -293,7 +275,6 @@ include __DIR__ . '/../header.php';
         </div>
       </div>
 
-      <!-- Botões -->
       <div class="d-flex justify-content-end gap-2">
         <button type="button" class="btn-modal-cancelar" onclick="fecharModal()">
           Cancelar
@@ -307,7 +288,6 @@ include __DIR__ . '/../header.php';
 </div>
 <?php endif; ?>
 
-<!-- Mensagem de sucesso/erro vinda do controller -->
 <?php if (isset($_GET['sucesso'])): ?>
 <div style="position:fixed;bottom:24px;right:24px;z-index:99999;animation:slideUp .3s ease;">
   <div style="background:#22c55e;color:white;border-radius:12px;padding:14px 20px;
@@ -331,7 +311,6 @@ include __DIR__ . '/../header.php';
 <?php endif; ?>
 
 <script>
-// ===== TAGS DROPDOWN FILTRO =====
 function toggleTagsDropdown() {
   const box = document.getElementById('dropdownTags');
   const btn = document.getElementById('btnTagsToggle');
@@ -352,7 +331,6 @@ function removerTag(nome) {
   document.getElementById('formFiltro').submit();
 }
 
-// ===== MODAL CRIAR POST =====
 function abrirModalCriar() {
   document.getElementById('modalCriarOverlay').classList.add('aberto');
   document.body.style.overflow = 'hidden';
@@ -366,7 +344,6 @@ function fecharModalFora(e) {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
 
-// Limita seleção de tags a 5
 document.querySelectorAll('input[name="tags_post[]"]').forEach(cb => {
   cb.addEventListener('change', function() {
     const selecionadas = document.querySelectorAll('input[name="tags_post[]"]:checked');

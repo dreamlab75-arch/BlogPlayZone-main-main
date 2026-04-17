@@ -1,7 +1,4 @@
 <?php
-// ============================================================
-// HELPER — upload de imagem e resolução de paths
-// ============================================================
 
 /**
  * Converte um path de imagem salvo no banco em URL absoluta para o browser.
@@ -21,12 +18,10 @@ function img_url(string $imagem, string $fallback = ''): string
         return $fallback;
     }
 
-    // URL externa — retorna direto
     if (str_starts_with($imagem, 'http://') || str_starts_with($imagem, 'https://')) {
         return $imagem;
     }
 
-    // Path local — torna absoluto com / no início
     return '/' . ltrim(str_replace('\\', '/', $imagem), '/');
 }
 
@@ -42,7 +37,7 @@ function img_onerror(string $fallback = ''): string
     if (empty($fallback)) {
         return "onerror=\"this.onerror=null;this.style.display='none';\"";
     }
-    // Garante que o fallback também seja absoluto
+
     $fb = img_url($fallback, '');
     return "onerror=\"this.onerror=null;this.src='" . htmlspecialchars($fb, ENT_QUOTES) . "';\"";
 }
@@ -55,7 +50,7 @@ function img_onerror(string $fallback = ''): string
  * @param  int     $id            ID do registro (usado no nome do arquivo)
  * @param  string  $pasta         Caminho absoluto da pasta de destino
  * @param  string  $imagem_atual  Path atual no banco (para deletar ao trocar)
- * @return string|null  Path relativo à raiz do projeto (para salvar no banco), ou null se sem upload
+ * @return string|null
  */
 function salvar_imagem(string $campo, string $prefixo, int $id, string $pasta, string $imagem_atual = ''): ?string
 {
@@ -69,7 +64,6 @@ function salvar_imagem(string $campo, string $prefixo, int $id, string $pasta, s
         throw new RuntimeException('Erro no upload da imagem (código ' . $file['error'] . ').');
     }
 
-    // Verifica MIME real (não confia só na extensão enviada)
     $mime_permitidos = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime  = $finfo->file($file['tmp_name']);
@@ -82,7 +76,6 @@ function salvar_imagem(string $campo, string $prefixo, int $id, string $pasta, s
     $nome_arquivo = "{$prefixo}_{$id}.{$ext}";
     $destino      = rtrim($pasta, '/') . '/' . $nome_arquivo;
 
-    // Apaga versão anterior do mesmo ID (qualquer extensão)
     foreach ($extensoes as $e) {
         $antigo = rtrim($pasta, '/') . "/{$prefixo}_{$id}.{$e}";
         if (file_exists($antigo)) {
@@ -94,8 +87,6 @@ function salvar_imagem(string $campo, string $prefixo, int $id, string $pasta, s
         throw new RuntimeException('Falha ao salvar o arquivo no servidor.');
     }
 
-    // Retorna path relativo à raiz do projeto (sem / inicial)
-    // Ex: posts-index/posts_img/post_1.jpg
     $raiz = realpath(__DIR__ . '/..');
     $path = str_replace('\\', '/', $destino);
     $raiz = str_replace('\\', '/', $raiz);

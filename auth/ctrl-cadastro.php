@@ -24,7 +24,6 @@ $senha_hash        = hash('sha256', $senha);
 $pdo               = new PDO('sqlite:' . __DIR__ . '/../banco.db');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Verifica email duplicado
 $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE email = :email');
 $stmt->execute([':email' => $email]);
 if ($stmt->fetch()) {
@@ -33,12 +32,10 @@ if ($stmt->fetch()) {
 }
 
 try {
-    // Insere sem avatar primeiro para ter o ID
     $stmt = $pdo->prepare('INSERT INTO usuarios (nome, email, senha, avatar, perfil_id) VALUES (:nome, :email, :senha, :avatar, 2)');
     $stmt->execute([':nome' => $nome, ':email' => $email, ':senha' => $senha_hash, ':avatar' => null]);
     $usuario_id = (int)$pdo->lastInsertId();
 
-    // Upload do avatar se enviado
     $pasta  = __DIR__ . '/../perfil/avatares';
     $avatar = salvar_imagem('avatar', 'avatar', $usuario_id, $pasta);
 
