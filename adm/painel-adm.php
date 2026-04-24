@@ -15,12 +15,15 @@ $result_perfis = $pdo->query($sql_perfis);
 
 
 $sql = "
-    SELECT usuarios.id, usuarios.nome, usuarios.email, perfil.tipo as perfil_tipo
+    SELECT usuarios.id, usuarios.nome, usuarios.email, perfil.tipo as perfil_tipo, usuarios.perfil_id
     FROM usuarios
     JOIN perfil ON usuarios.perfil_id = perfil.id
     ORDER BY usuarios.id ASC
 ";
 $result_set_usuarios = $pdo->query($sql);
+
+// Busca perfis para os selects da tabela
+$perfis = $pdo->query("SELECT id, tipo FROM perfil ORDER BY tipo")->fetchAll(\PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,20 +36,39 @@ $result_set_usuarios = $pdo->query($sql);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
   const alerts = document.querySelectorAll('.alert');
   alerts.forEach(function(alert) {
     setTimeout(function() {
       alert.style.transition = 'opacity 0.5s ease';
       alert.style.opacity = '0';
-      setTimeout(function() {
-        alert.remove();
-      }, 500);
+      setTimeout(function() { alert.remove(); }, 500);
     }, 3000);
   });
 });
 </script>
+<style>
+.adm-perfil-select {
+  font-size: .82rem;
+  padding: 4px 28px 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid #ede8ff;
+  background-color: #f8f5ff;
+  color: #611DF2;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+  min-width: 130px;
+}
+.adm-perfil-select:hover:not(:disabled) {
+  border-color: #611DF2;
+  box-shadow: 0 0 0 3px rgba(97,29,242,.1);
+}
+.adm-perfil-select:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+</style>
 <body class="adm-body">
   <div class="adm-layout">
 
@@ -120,15 +142,23 @@ document.addEventListener('DOMContentLoaded', function() {
               ?>
               <tr>
                 <td class="coluna-id"><?= $id ?></td>
-                <td><?= $nome ?></td>
-                <td><?= $email ?></td>
-                <td><span class="adm-badge adm-badge--<?= $perfil ?>"><?= $perfil ?></span></td>
+                <td><?= htmlspecialchars($nome) ?></td>
+                <td><?= htmlspecialchars($email) ?></td>
                 <td>
-                <a href="ctrl-edit-usuario.php?id=<?= $id ?>"
-
-                       class="btn-adm-editar">
-                       <i class="bi bi-pencil-square"></i>
-                    </a>
+                  <form method="POST" action="ctrl-edit-usuario.php" style="margin:0;">
+                    <input type="hidden" name="usuario_id" value="<?= $id ?>">
+                    <select name="perfil_id" class="form-select form-select-sm adm-perfil-select"
+                            onchange="this.form.submit()"
+                            <?= $id === (int)$_SESSION['usuario_id'] ? 'disabled title="Você não pode alterar seu próprio perfil"' : '' ?>>
+                      <?php foreach ($perfis as $p): ?>
+                        <option value="<?= $p['id'] ?>" <?= $p['id'] == $uma_linha['perfil_id'] ? 'selected' : '' ?>>
+                          <?= htmlspecialchars($p['tipo']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </form>
+                </td>
+                <td>
                   <?php if ($id !== (int)$_SESSION["usuario_id"]): ?>
                     <a href="ctrl-apagar-usuario.php?id=<?= $id ?>"
                        onclick="return confirm('Deletar <?= $nome ?>?')"
